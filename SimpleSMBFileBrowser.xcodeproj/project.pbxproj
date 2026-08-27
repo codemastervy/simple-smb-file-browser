@@ -15,17 +15,22 @@
 		4138E178A1641CDD81B62D7E /* BrowsePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */; };
 		4884E23D211D54CFC94FB6FA /* SMBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA98EB0D330C60856DED4F8 /* SMBClient.swift */; };
 		4B45E8D876C6DC639EE05751 /* BrowserSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7084644EDD77C8E7BDE5FFB /* BrowserSorting.swift */; };
+		4D742550F4F9C7C1E0B6BD96 /* TransferCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F1988EFB5C91953A35C5F4 /* TransferCenter.swift */; };
 		5159B1913C637AAAEDCBACC7 /* DeviceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42C0E01575029B149D9AAAC /* DeviceLocation.swift */; };
 		56AE457AFB9F0853800A698B /* ServerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E43108691CF2C9563D05B19 /* ServerStore.swift */; };
 		6543872AC4741DA93A26658B /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE33A97EA80FC71804662A /* ConnectionState.swift */; };
 		66F45B451B80A1E90AB1C42C /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = E90869453994ED1D5086A296 /* AMSMB2 */; };
 		7982B8B22BA2D40A58D17D56 /* SMBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A25FD4BA19AEC9946006CC /* SMBService.swift */; };
 		8E0267C7418A10A4F7EC0CA6 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA21469DCEB0595ACF06F2C /* KeychainService.swift */; };
+		98A9147C3C6A6DD530A14490 /* AppPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A475F235BD2D7B3ECCFDEE1 /* AppPreferences.swift */; };
 		B093EB71B82E9C17399EAB0E /* SimpleSMBFileBrowserApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */; };
 		BDD5686C66817B8C9C79A6D1 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 1DFCFEB0B36F7D99F5B757A6 /* AMSMB2 */; };
 		C06B05D81998DC2CBA3D5BC2 /* DeviceFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10B8912CA30AF7FBAB30FDF /* DeviceFileService.swift */; };
 		C9D5600892171BFB34EC2E61 /* BrowseFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B2DC47646E25EAD5F84F8 /* BrowseFailure.swift */; };
+		DDF5C0696A5765FA6AA46866 /* Transfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6229C0873A3EB315227C7206 /* Transfer.swift */; };
 		DE1ADE465866DBBBA5821DE1 /* RecoveryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15C6183E858BCC6707D8B1C /* RecoveryApp.swift */; };
+		EA68F5DEED50BF13041848E2 /* FileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409A6FB36CCCDE19F03FE5B4 /* FileProvider.swift */; };
+		F8A7C9A501411998D5E11D7D /* TransferCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D7E344EBA501A7C910F1A /* TransferCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,15 +53,20 @@
 /* Begin PBXFileReference section */
 		00A25FD4BA19AEC9946006CC /* SMBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBService.swift; sourceTree = "<group>"; };
 		0E419C909BEAD21C0DC01E97 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		110D7E344EBA501A7C910F1A /* TransferCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCoordinator.swift; sourceTree = "<group>"; };
 		134C2A346705B80482BC4DEA /* SimpleSMBFileBrowserUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SimpleSMBFileBrowserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18627F390987525A526FED60 /* SimpleSMBFileBrowserTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SimpleSMBFileBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BA21469DCEB0595ACF06F2C /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		409A6FB36CCCDE19F03FE5B4 /* FileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProvider.swift; sourceTree = "<group>"; };
 		4AEE33A97EA80FC71804662A /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		4E43108691CF2C9563D05B19 /* ServerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStore.swift; sourceTree = "<group>"; };
 		5BA98EB0D330C60856DED4F8 /* SMBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBClient.swift; sourceTree = "<group>"; };
+		60F1988EFB5C91953A35C5F4 /* TransferCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCenter.swift; sourceTree = "<group>"; };
+		6229C0873A3EB315227C7206 /* Transfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transfer.swift; sourceTree = "<group>"; };
 		6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowsePath.swift; sourceTree = "<group>"; };
 		70FF846C96CECC4AE36DCD9D /* ServerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerProfile.swift; sourceTree = "<group>"; };
 		73EFA5C1CEF6404987E0A5DF /* SimpleSMBFileBrowser.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SimpleSMBFileBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A475F235BD2D7B3ECCFDEE1 /* AppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferences.swift; sourceTree = "<group>"; };
 		863B2DC47646E25EAD5F84F8 /* BrowseFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseFailure.swift; sourceTree = "<group>"; };
 		AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSMBFileBrowserApp.swift; sourceTree = "<group>"; };
 		B027A5FA4036132C63743A07 /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
@@ -128,12 +138,16 @@
 		3814A001839796071374E37F /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7A475F235BD2D7B3ECCFDEE1 /* AppPreferences.swift */,
 				F10B8912CA30AF7FBAB30FDF /* DeviceFileService.swift */,
+				409A6FB36CCCDE19F03FE5B4 /* FileProvider.swift */,
 				3BA21469DCEB0595ACF06F2C /* KeychainService.swift */,
 				4E43108691CF2C9563D05B19 /* ServerStore.swift */,
 				5BA98EB0D330C60856DED4F8 /* SMBClient.swift */,
 				B47F61BBB5786E61FB3A49D1 /* SMBClientEnvironment.swift */,
 				00A25FD4BA19AEC9946006CC /* SMBService.swift */,
+				60F1988EFB5C91953A35C5F4 /* TransferCenter.swift */,
+				110D7E344EBA501A7C910F1A /* TransferCoordinator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -158,6 +172,7 @@
 				B027A5FA4036132C63743A07 /* FileItem.swift */,
 				D15C6183E858BCC6707D8B1C /* RecoveryApp.swift */,
 				70FF846C96CECC4AE36DCD9D /* ServerProfile.swift */,
+				6229C0873A3EB315227C7206 /* Transfer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -339,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A9147C3C6A6DD530A14490 /* AppPreferences.swift in Sources */,
 				C9D5600892171BFB34EC2E61 /* BrowseFailure.swift in Sources */,
 				4138E178A1641CDD81B62D7E /* BrowsePath.swift in Sources */,
 				4B45E8D876C6DC639EE05751 /* BrowserSorting.swift in Sources */,
@@ -346,6 +362,7 @@
 				C06B05D81998DC2CBA3D5BC2 /* DeviceFileService.swift in Sources */,
 				5159B1913C637AAAEDCBACC7 /* DeviceLocation.swift in Sources */,
 				0680547333E4ED87C384250F /* FileItem.swift in Sources */,
+				EA68F5DEED50BF13041848E2 /* FileProvider.swift in Sources */,
 				8E0267C7418A10A4F7EC0CA6 /* KeychainService.swift in Sources */,
 				DE1ADE465866DBBBA5821DE1 /* RecoveryApp.swift in Sources */,
 				05D10E4F100B9AF459EAAECC /* RootView.swift in Sources */,
@@ -355,6 +372,9 @@
 				027B7F12DCA2F5D34E951B3B /* ServerProfile.swift in Sources */,
 				56AE457AFB9F0853800A698B /* ServerStore.swift in Sources */,
 				B093EB71B82E9C17399EAB0E /* SimpleSMBFileBrowserApp.swift in Sources */,
+				DDF5C0696A5765FA6AA46866 /* Transfer.swift in Sources */,
+				4D742550F4F9C7C1E0B6BD96 /* TransferCenter.swift in Sources */,
+				F8A7C9A501411998D5E11D7D /* TransferCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
