@@ -136,55 +136,69 @@ iPad/Mac-only by design and is covered on iPad below).
 
 ## Defects the tests found
 
-Recorded because all four were fixed rather than worked around.
+Seven, all fixed rather than worked around. Several presented as broken test
+code and turned out to be the app.
 
 **1. SMB path joins disagreed with AMSMB2's own paths.**
 `BrowsePath.appending` returned a relative path when joining onto the share root
-(`"Movies"`), while AMSMB2's directory listings report absolute `.pathKey` values
-(`"/Movies"`). A path the app constructed and a path the server reported were
-therefore not interchangeable. Caught by `testRenameMovesToSiblingPath`. Fixed in
-`BrowsePath.appending`; the expectations encoding the old behaviour were updated.
+(`"Movies"`), while AMSMB2's listings report absolute `.pathKey` values
+(`"/Movies"`). A path the app constructed and a path the server reported were not
+interchangeable. Caught by `testRenameMovesToSiblingPath`.
 
 **2. Every Keychain call failed with `errSecMissingEntitlement` (-34018).**
-Root cause was `CODE_SIGNING_ALLOWED = NO` in the build settings: with signing
-skipped entirely, *no entitlements are applied to the binary at all*. Ad-hoc
-signing is now allowed (still not *required*), which makes the entitlements real.
-All 11 Keychain tests consequently run against the actual Keychain rather than
-skipping. A skip guard for -34018 remains in the suite so the tests degrade
-gracefully in an environment that genuinely cannot sign.
+Root cause was `CODE_SIGNING_ALLOWED = NO`: with signing skipped entirely, *no
+entitlements are applied to the binary at all*. Reads like a sandbox quirk; was a
+build setting. Ad-hoc signing is now allowed (still not required), and all 11
+Keychain tests run against the real Keychain instead of skipping.
 
-**3. The failure modal's Retry swallowed its own failure.** (Found by UI tests.)
-Retry called `dismiss()` after retrying, but presentation is driven by
-`model.presentedFailure` — so `dismiss()` set that binding back to `nil` and
-discarded the fresh failure the retry had just produced. Retrying against a
-still-broken server left the user on an empty browser with no explanation. Fixed
-by letting the binding drive presentation.
+**3. The failure modal's Retry swallowed its own failure.** Retry called
+`dismiss()`, which reset the binding driving presentation and discarded the fresh
+failure the retry had just produced. Retrying a still-broken server left the user
+on an empty browser with no explanation.
 
-**4. The delete confirmation could not be cancelled with VoiceOver.** (Found by
-UI tests.) `testDeleteCanBeCancelled` could not find a Cancel element. Dumping
-the accessibility hierarchy while the confirmation was on screen showed the
-`confirmationDialog` exposing only its Delete button — the `.cancel`-role button
-was absent from the tree entirely on iOS 26. That is an accessibility defect, not
-a test-matching quirk: a VoiceOver user could confirm a destructive delete but
-not back out of it. Replaced with an `.alert`, which exposes both buttons, reads
-correctly on macOS, and has room for an explicit "This can't be undone." message.
+**4. The delete confirmation could not be cancelled with VoiceOver.**
+`confirmationDialog` on iOS 26 exposes only its Delete button — the
+`.cancel`-role button is absent from the accessibility tree, verified by dumping
+the hierarchy while it was presented. A VoiceOver user could confirm a
+destructive delete but not back out. Replaced with an `.alert`.
 
-The same investigation showed `testMultiSelectDeleteRemovesChosenFiles` had been
-passing partly by luck: its `app.buttons["Delete"]` query matched the batch action
-bar's own Delete button, so it never actually asserted that a confirmation had
-appeared. Both delete tests are now scoped to `app.alerts`.
+**5. Multi-select delete did nothing at all on iPad.** The batch bar's actions
+were bare `Label`s at `.title3`, giving roughly **22×25pt** hit areas — half
+Apple's 44pt minimum. On iPhone taps happened to land; on iPad they hit the
+surrounding glass panel, so tapping Delete never ran its action and no
+confirmation ever appeared. Each action is now a 44×44 frame with an explicit
+`contentShape`. This was also an accessibility violation on every platform, not
+just an iPad bug.
 
-### A note on how these were found
+**6. Browse failures were recorded and never displayed.**
+`FileBrowserViewModel.failure` was set on every failed operation — listing,
+delete, rename, move, folder creation — and **read by no view**. A delete the
+server refused looked identical to one that succeeded, because the listing simply
+reloaded unchanged. Remote failures now raise the full-screen modal; on-device
+locations get an inline banner.
 
-Three of the four came from tests failing for reasons I initially assumed were my
-test code being wrong. Two of those assumptions were correct — iPhone's collapsed
-`NavigationSplitView` genuinely does hide the sidebar, so those assertions were
-mine to fix — but the Keychain, Retry, and cancel-button failures were the app.
-The Keychain one in particular presented as an environment problem
-(`errSecMissingEntitlement` reads like a sandbox quirk) and was actually a build
-setting silently dropping all entitlements.
+**7. The pane identifier hid the entire pane.** An intermediate fix put
+`.accessibilityIdentifier` on the pane's content container, which makes it a
+single accessibility element and swallows every child — the list, the rows and
+the batch bar all vanished, breaking three previously-passing iPad tests. The
+identifier belongs on the list and grid, namespaced per pane.
 
----
+### Two wrong diagnoses, recorded honestly
+
+Defect 5 took three attempts. I first blamed stacked `.alert` modifiers and
+consolidated them into a single routed alert; then blamed the `.overlay` and
+switched to `.safeAreaInset`. Neither was the cause. Both changes were kept
+because both are improvements — one presentation modifier per view is correct,
+and an inset stops the bar covering the last row — but they were claimed as
+fixes before being verified, and they weren't.
+
+The actual cause only emerged from dumping the accessibility hierarchy at the
+point of failure, which showed the buttons present and the alert's text entirely
+absent. That should have been the first step, not the third.
+
+Also worth stating plainly: had only the iPhone simulator been run, this would
+have shipped an iPad build where **you cannot delete or rename a file**. The
+iPad run was not a formality.
 
 ## Known limitations
 
@@ -213,6 +227,20 @@ the ad-hoc-signed bundle carries the correct entitlements and
 `LSMinimumSystemVersion 14.0`. The UI test suite is written to run there — it
 branches on `os(macOS)` for right-click and treats the Mac as regular-width — but
 those runs have not happened, so no Mac UI result is claimed.
+
+**Drag-and-drop between panes: the gesture is not automatable.** XCUITest
+synthesizes the drag — the run log shows the press, the drag and the velocity —
+but SwiftUI's `.draggable`/`.dropDestination` session never starts from
+synthesized events, so no drop occurs. Four approaches were tried
+(`press(forDuration:thenDragTo:)`, the same with
+`withVelocity:thenHoldForDuration:`, the `XCUICoordinate` variant, and dragging
+onto a concrete row rather than the pane); all deliver the gesture and none
+produce a drop. The test asserts everything up to the drop — both panes open, are
+independently addressable, and each lists its files — then skips explicitly.
+Drop *behaviour* is covered without the gesture by `FileTransferPayloadTests` and
+`TransferCoordinatorTests`, which run the same cross-provider transfer a drop
+triggers. **The gesture itself has never been executed and needs manual
+verification.**
 
 **iPad multitasking not automated.** Split View and Slide Over layouts were
 designed for (`UIRequiresFullScreen = NO`, adaptive grid columns, breadcrumbs

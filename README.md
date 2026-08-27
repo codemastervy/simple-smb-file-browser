@@ -327,6 +327,11 @@ dialect negotiation, large-file throughput, unusual character encodings in
 filenames) is untested. Point it at a real share before trusting it with
 anything.
 
+**Drag-and-drop between panes is not covered by an automated test.** SwiftUI
+drag sessions don't start from XCUITest-synthesized events, so the gesture cannot
+be driven in a test. The logic a drop invokes is unit-tested; the gesture needs
+manual verification. See TEST_RESULTS.md.
+
 **Server-side copy depends on the server.** `copyItem` is delegated to AMSMB2;
 servers that do not support the relevant FSCTL fall back to its own read/write
 loop.
