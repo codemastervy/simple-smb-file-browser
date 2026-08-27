@@ -322,15 +322,15 @@ should cost. With a team configured it is a reasonable next step: `SMBService`
 and `FileProviding` are already the right seams for it, since the extension would
 need exactly the same operations the app's panes use.
 
-**Guest access does not work against Samba.** Tested against Samba 4.19.5
-(CasaOS): macOS's own client enumerates the shares and mounts one as guest, but
-AMSMB2 rejects every guest credential combination with EPERM. AMSMB2 keeps its
-auth and signing settings `internal`, so this cannot be worked around from
-application code — it needs a patched AMSMB2. Authenticated connections are
-untested. Full detail and the credential matrix are in TEST_RESULTS.md. **If you
-rely on guest shares, this app will not connect to them today.**
+**AMSMB2 is pinned to an unreleased revision, deliberately.** Release 4.0.3
+cannot connect to a guest SMB share at all: it sends an NTLMv2 response over an
+empty password instead of an anonymous session, and Samba rejects it with EPERM.
+Upstream commit `497ce6e` fixes this and has never been tagged, so `project.yml`
+pins the revision. Verified against Samba 4.19.5 — broken before, working after.
+Move back to a release tag once one ships above 4.0.3. Details in
+TEST_RESULTS.md.
 
-**Little else here has been exercised against a real SMB server.** Every SMB test
+**Live testing covered one server.** The integration suite has been run against Samba 4.19.5 (CasaOS) — connect, enumerate, list, upload, download, stream, rename, delete all pass. Other servers, dialects and edge cases (Windows shares, macOS sharing, NAS firmware variants, very large files, unusual filename encodings) remain untested. Every SMB test
 runs against a mock through the `SMBClient` seam. That is deliberate for the
 failure cases — an auth rejection and a timeout cannot be produced reliably
 otherwise — but it does mean real-world interoperability (server quirks, SMB

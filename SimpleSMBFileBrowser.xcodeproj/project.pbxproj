@@ -866,8 +866,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/amosavian/AMSMB2.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.3;
+				kind = revision;
+				revision = 497ce6e3d39f36b1b5af44f56b9a1273b6c91164;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

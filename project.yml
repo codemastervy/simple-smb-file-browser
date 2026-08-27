@@ -19,7 +19,23 @@ options:
 packages:
   AMSMB2:
     url: https://github.com/amosavian/AMSMB2.git
-    from: 4.0.3
+    # Pinned to a revision, not a release tag, and the reason is specific.
+    #
+    # 4.0.3 — still the latest tag — passes an empty password straight through
+    # to smb2_set_password. libsmb2 then treats it as a real (zero-length)
+    # password and computes an NTLMv2 response, instead of sending an anonymous
+    # session. Samba rejects that with EPERM, so *guest shares cannot be
+    # connected to at all* on 4.0.3. Verified against Samba 4.19.5: every guest
+    # credential combination failed, while macOS's own client connected fine.
+    #
+    # Upstream commit 497ce6e "fix: empty password handling" (2025-12-27) maps
+    # an empty password to NULL, which makes libsmb2 send NTLMSSP with the
+    # anonymous flag. With it, guest connect, listing and the full write cycle
+    # all succeed against the same server. The fix is on master and has never
+    # been tagged, hence the pin.
+    #
+    # Revisit when a release above 4.0.3 ships, and move back to `from:`.
+    revision: 497ce6e3d39f36b1b5af44f56b9a1273b6c91164
 
 # Settings shared by every target.
 settings:
