@@ -6,12 +6,12 @@ enum ConnectionState: Equatable, Sendable {
     case disconnected
     case connecting
     case connected
-    case failed(SMBFailure)
+    case failed(BrowseFailure)
 
     var isConnected: Bool { self == .connected }
     var isBusy: Bool { self == .connecting }
 
-    var failure: SMBFailure? {
+    var failure: BrowseFailure? {
         if case .failed(let failure) = self { return failure }
         return nil
     }
