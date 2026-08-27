@@ -47,10 +47,26 @@ struct RootView: View {
 struct DetailView: View {
     @Bindable var model: AppModel
 
+    #if !os(macOS)
+    // Size class, not device idiom: an iPad in Slide Over is compact width, and
+    // two panes there would be unusable. The second pane collapses away and
+    // returns when the app is given room again.
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
+
+    private var hasRoomForTwoPanes: Bool {
+        #if os(macOS)
+        return true
+        #else
+        return horizontalSizeClass == .regular
+        #endif
+    }
+
     var body: some View {
         Group {
             if let location = model.selectedLocation, let browser = model.browser(for: location) {
                 if model.isDualPaneEnabled,
+                   hasRoomForTwoPanes,
                    let secondary = model.secondaryLocation,
                    let secondaryBrowser = model.browser(for: secondary) {
                     dualPane(primary: browser, secondary: secondaryBrowser)

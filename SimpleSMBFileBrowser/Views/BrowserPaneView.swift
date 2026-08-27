@@ -316,41 +316,57 @@ struct BrowserPaneView: View {
     // MARK: - Batch actions
 
     private var batchActionBar: some View {
-        HStack(spacing: 18) {
+        HStack(spacing: 8) {
             Text("\(browser.selection.count) selected")
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.secondary)
-            Spacer()
-            Button {
+            Spacer(minLength: 8)
+
+            batchButton("Copy", systemImage: "doc.on.doc") {
                 destinationRequest = DestinationRequest(items: browser.selectedItems, mode: .copy)
-            } label: {
-                Label("Copy", systemImage: "doc.on.doc")
             }
-            Button {
+            batchButton("Move", systemImage: "folder") {
                 destinationRequest = DestinationRequest(items: browser.selectedItems, mode: .move)
-            } label: {
-                Label("Move", systemImage: "folder")
             }
-            Button {
+            batchButton("Download", systemImage: "arrow.down.circle") {
                 downloadSelected()
-            } label: {
-                Label("Download", systemImage: "arrow.down.circle")
             }
             .disabled(!browser.provider.isRemote)
-            Button(role: .destructive) {
+            batchButton("Delete", systemImage: "trash", isDestructive: true) {
                 activeAlert = .delete(browser.selectedItems)
-            } label: {
-                Label("Delete", systemImage: "trash")
             }
             .accessibilityIdentifier("browser.batchDelete")
         }
-        .labelStyle(.iconOnly)
-        .font(.title3)
-        .padding(.horizontal, 18)
-        .padding(.vertical, 12)
+        .padding(.leading, 16)
+        .padding(.trailing, 8)
+        .padding(.vertical, 6)
         .glassPanel()
         .softDepth()
-        .padding(14)
+        .padding(.horizontal, 14)
+        .padding(.bottom, 10)
+    }
+
+    /// Icon-only action with a full 44pt touch target.
+    ///
+    /// These were previously bare `Label`s at `.title3`, which produced ~22x25pt
+    /// hit areas — under Apple's 44pt minimum, and small enough that taps on
+    /// iPad landed on the surrounding glass panel instead of the button. The
+    /// explicit frame plus contentShape makes the whole square tappable.
+    private func batchButton(
+        _ title: String,
+        systemImage: String,
+        isDestructive: Bool = false,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.title3)
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(isDestructive ? AnyShapeStyle(.red) : AnyShapeStyle(.tint))
+        .accessibilityLabel(title)
     }
 
     // MARK: - Toolbar
