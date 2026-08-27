@@ -7,6 +7,9 @@ struct BrowserPaneView: View {
     @Bindable var browser: FileBrowserViewModel
     /// Shown in the pane header when two panes are visible.
     var showsPaneHeader = false
+    /// Distinguishes the two panes for accessibility and UI tests; a shared
+    /// identifier would make a drop target ambiguous.
+    var paneIdentifier = "browser.pane"
     var onClosePane: (() -> Void)?
 
     @State private var isSelecting = false
@@ -193,6 +196,7 @@ struct BrowserPaneView: View {
         .overlay(alignment: .bottom) {
             if isSelecting, !browser.selection.isEmpty { batchActionBar }
         }
+        .accessibilityIdentifier(paneIdentifier)
     }
 
     private var listView: some View {

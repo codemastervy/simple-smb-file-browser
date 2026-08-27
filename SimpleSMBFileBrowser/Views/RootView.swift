@@ -79,16 +79,20 @@ struct DetailView: View {
         secondary: FileBrowserViewModel
     ) -> some View {
         HStack(spacing: 0) {
-            BrowserPaneView(model: model, browser: primary, showsPaneHeader: true)
+            BrowserPaneView(
+                model: model, browser: primary,
+                showsPaneHeader: true,
+                paneIdentifier: "browser.pane.primary"
+            )
             Divider()
             BrowserPaneView(
                 model: model,
                 browser: secondary,
                 showsPaneHeader: true,
+                paneIdentifier: "browser.pane.secondary",
                 onClosePane: { model.closeSecondPane() }
             )
         }
-        .accessibilityIdentifier("browser.dualPane")
     }
 
     /// Compact always-visible progress strip; tapping opens the full panel.

@@ -81,7 +81,10 @@ final class FileOperationsUITests: XCTestCase {
         // "Delete", so an unscoped query matches whether or not the confirmation
         // is actually up.
         let alert = app.alerts.firstMatch
-        XCTAssertTrue(alert.waitForExistence(timeout: 10), "Deleting should ask for confirmation")
+        XCTAssertTrue(
+            alert.waitForExistence(timeout: 10),
+            "Deleting should ask for confirmation. Element tree:\n\(app.debugDescription)"
+        )
         alert.buttons["Delete"].tap()
 
         XCTAssertTrue(
@@ -101,7 +104,10 @@ final class FileOperationsUITests: XCTestCase {
         element(app, "browser.batchDelete").tap()
 
         let alert = app.alerts.firstMatch
-        XCTAssertTrue(alert.waitForExistence(timeout: 10), "Deleting should ask for confirmation")
+        XCTAssertTrue(
+            alert.waitForExistence(timeout: 10),
+            "Deleting should ask for confirmation. Element tree:\n\(app.debugDescription)"
+        )
 
         let cancel = alert.buttons["Cancel"]
         XCTAssertTrue(cancel.waitForExistence(timeout: 10), "The confirmation must offer Cancel")
@@ -179,17 +185,21 @@ final class FileOperationsUITests: XCTestCase {
         )
         openInSecondPane.tap()
 
-        XCTAssertTrue(
-            element(app, "browser.dualPane").waitForExistence(timeout: 10),
-            "Two panes should now be visible"
+        let primaryPane = element(app, "browser.pane.primary")
+        let secondaryPane = element(app, "browser.pane.secondary")
+        XCTAssertTrue(primaryPane.waitForExistence(timeout: 10), "Primary pane should be visible")
+        XCTAssertTrue(secondaryPane.waitForExistence(timeout: 10), "Second pane should be visible")
+
+        // Drag from the first pane onto the second. Targeting the pane's own
+        // element rather than a wrapper: a container identifier resolved as a
+        // non-hittable element and the drag had nothing to land on.
+        let source = primaryPane.staticTexts["sample-3.txt"].firstMatch
+        XCTAssertTrue(source.waitForExistence(timeout: 10), "Expected sample-3.txt in the first pane")
+
+        source.press(
+            forDuration: 1.2,
+            thenDragTo: secondaryPane.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).referencedElement
         )
-
-        // Drag a file from the first pane onto the second.
-        let source = app.staticTexts["sample-3.txt"].firstMatch
-        XCTAssertTrue(source.waitForExistence(timeout: 10))
-        let destination = element(app, "browser.dualPane")
-
-        source.press(forDuration: 1.2, thenDragTo: destination)
 
         // The drop copies with a de-duplicated name rather than clobbering.
         let copied = app.staticTexts["sample-3 2.txt"]

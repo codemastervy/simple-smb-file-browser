@@ -205,6 +205,15 @@ and recovery-app URL schemes — no VPN or tunnel app is installed in a simulato
 so `AppLauncher` has never successfully launched one. Its failure path is what
 gets exercised.
 
+**macOS UI automation was not run.** XCUITest on macOS drives the real cursor and
+keyboard and takes over the machine for the duration, so it was not run on the
+development machine in this session. The Mac side is covered by a clean build,
+the full 146-test unit suite passing on `platform=macOS`, and verification that
+the ad-hoc-signed bundle carries the correct entitlements and
+`LSMinimumSystemVersion 14.0`. The UI test suite is written to run there — it
+branches on `os(macOS)` for right-click and treats the Mac as regular-width — but
+those runs have not happened, so no Mac UI result is claimed.
+
 **iPad multitasking not automated.** Split View and Slide Over layouts were
 designed for (`UIRequiresFullScreen = NO`, adaptive grid columns, breadcrumbs
 that scroll, `@ScaledMetric` sizing) but there is no automated test that resizes
