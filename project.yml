@@ -46,7 +46,11 @@ targetTemplates:
         CODE_SIGN_IDENTITY: "-"
         PROVISIONING_PROFILE_SPECIFIER: ""
         CODE_SIGNING_REQUIRED: NO
-        CODE_SIGNING_ALLOWED: NO
+        # Signing must be ALLOWED even though it isn't REQUIRED: with it off,
+        # no entitlements are applied to the binary at all, and every Keychain
+        # call fails with errSecMissingEntitlement (-34018). Ad-hoc signing is
+        # enough to make the entitlements real on the simulator and on Mac.
+        CODE_SIGNING_ALLOWED: YES
 
 targets:
   SimpleSMBFileBrowser:
@@ -66,6 +70,9 @@ targets:
     settings:
       base:
         PRODUCT_NAME: Simple SMB
+        # Without this the module would be derived from PRODUCT_NAME as
+        # "Simple_SMB", which is what tests would have to import.
+        PRODUCT_MODULE_NAME: SimpleSMBFileBrowser
         PRODUCT_BUNDLE_IDENTIFIER: eu.org.amirulandalib.SimpleSMBFileBrowser
         SDKROOT: auto
         SUPPORTED_PLATFORMS: "iphoneos iphonesimulator macosx"

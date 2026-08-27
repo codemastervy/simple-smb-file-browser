@@ -6,7 +6,9 @@ import SwiftUI
 /// When nothing is configured yet, the prompt to add a server appears inline in
 /// the detail column rather than as a blocking modal.
 struct RootView: View {
-    @State private var model = AppModel()
+    // UITestSupport returns a plain AppModel unless the process was launched
+    // with -uiTesting, so this is a no-op in normal use.
+    @State private var model = UITestSupport.makeAppModel()
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     var body: some View {

@@ -10,8 +10,14 @@ enum BrowsePath {
     static let smbRoot = "/"
 
     /// Appends a single component to a directory path.
+    ///
+    /// Joining onto the root yields an absolute path ("/Movies"), matching the
+    /// `.pathKey` values AMSMB2 returns from a listing. Keeping the two forms
+    /// identical means a path the app builds and a path the server reported are
+    /// interchangeable.
     static func appending(_ component: String, to directory: String) -> String {
-        guard !directory.isEmpty, directory != smbRoot else { return component }
+        guard !directory.isEmpty else { return component }
+        guard directory != smbRoot else { return smbRoot + component }
         return directory.hasSuffix("/") ? directory + component : directory + "/" + component
     }
 
