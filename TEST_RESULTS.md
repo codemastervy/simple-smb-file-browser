@@ -31,8 +31,10 @@ All four suites run against the same commit, after every fix below.
 The single skip in each UI suite is the drag *gesture*, which XCUITest cannot
 drive; see Known limitations. Everything around it in that test runs and passes.
 
-**Not covered by any of this:** the app has never connected to a real SMB server.
-See Known limitations — that gap is structural, not an oversight.
+Plus **6 live integration tests** against a real Samba server — connect,
+enumerate, list, upload, download, stream, rename, delete — which found and
+forced the fix of a dependency bug that made guest shares unconnectable. See
+"Live server test" below.
 
 ---
 
@@ -231,145 +233,141 @@ Also worth stating plainly: had only the iPhone simulator been run, this would
 have shipped an iPad build where **you cannot delete or rename a file**. The
 iPad run was not a formality.
 
-## Live server test — a blocking finding
+## Live server test — a real bug, found and fixed
 
-Run against a real server for the first time: **Samba 4.19.5-Ubuntu (CasaOS) at a
-LAN address, 7 shares, guest access enabled.**
+Run against a real server: **Samba 4.19.5-Ubuntu (CasaOS) on a LAN address, 6
+data shares, guest read/write.**
 
-**Result: AMSMB2 cannot authenticate to it at all. The app does not connect.**
+**Result: 6/6 live tests pass, including the full write cycle.** Getting there
+meant fixing a real dependency bug that no mocked test could have found.
 
-Reachability and server-side guest access were both confirmed independently
-first, using macOS's own SMB client:
+### What broke
+
+On AMSMB2 **4.0.3** — still the latest release — the app could not connect to a
+guest share at all. Every credential combination failed with `POSIXError` code 1
+(**EPERM**): `guest`/empty, empty/empty, unknown-user/empty, unknown-user with a
+password, with and without `WORKGROUP` — ten variants. The unknown-user cases
+were chosen to trigger Samba's `map to guest` fallback; it did not help.
+
+The server was cleared of suspicion first, using macOS's own SMB client:
 
 | Check | Tool | Result |
 |---|---|---|
 | Host up | `ping` | 0% loss |
 | SMB listening | `nc -z 445` | open |
-| Share enumeration as guest | `smbutil view -g` | **7 shares listed** |
-| Guest *access* to a data share | `mount_smbfs -N //guest@host/Files` | **mounted, real files listed** |
+| Share enumeration as guest | `smbutil view -g` | 7 shares listed |
+| Guest *access* to a data share | `mount_smbfs -N` | mounted, real files listed |
 
-So the server is reachable, guest is permitted, and the native client works.
-Through AMSMB2 every credential combination fails identically with
-`POSIXError` code 1 (**EPERM**) and an empty description:
+### Root cause
 
-| user | password | domain | Result |
-|---|---|---|---|
-| `guest` | *(empty)* | — | EPERM |
-| *(empty)* | *(empty)* | — | EPERM |
-| `guest` | *(empty)* | `WORKGROUP` | EPERM |
-| *(empty)* | *(empty)* | `WORKGROUP` | EPERM |
-| `guest` | `guest` | `WORKGROUP` | EPERM |
-| `guest` | `x` | — | EPERM |
-| unknown user | *(empty)* | — | EPERM |
-| unknown user | `anything` | — | EPERM |
-| `nobody` | *(empty)* | — | EPERM |
-| real-looking user | *(empty)* | — | EPERM |
+`Context.password` on 4.0.3 passes an empty password straight to
+`smb2_set_password`. libsmb2 `strdup`s it, so `auth_data->password` is non-NULL
+and this branch in `ntlmssp.c` never fires:
 
-The unknown-user rows were chosen deliberately to trigger Samba's
-`map to guest = Bad User` / `Bad Password` behaviour, which grants guest access
-to unrecognised logins. It did not help.
+```c
+if (auth_data->password == NULL) {
+        anonymous = 1;
+        goto encode;
+}
+```
 
-### What the cause is not
+libsmb2 then computes an NTLMv2 response over a zero-length password instead of
+setting `NTLMSSP_NEGOTIATE_ANONYMOUS`, and Samba rejects it. macOS's client
+succeeds because it sends a genuine anonymous session.
 
-- **Not Kerberos.** `AMSMB2.initClient` forces `authentication = .ntlmSsp`.
-- **Not signing.** It sets `securityMode = [.enabled]`.
-- **Not an empty-password bug in the app.** `Context.password` already converts
-  `""` to a NULL password, which is the anonymous path.
-- **Not the server.** The native client does guest access on the same share,
-  minutes apart, from the same machine.
+Worth recording: the first hypothesis was the exact inverse — that AMSMB2 was
+converting `""` to NULL and *that* was the bug. That behaviour exists on master,
+not in 4.0.3. Reading the resolved package instead of the default branch
+corrected it; building a patched copy proved it.
 
-The remaining explanation is libsmb2's NTLMSSP anonymous/guest session handling.
-**AMSMB2 exposes no way to influence it:** `securityMode`, `authentication` and
-`seal` are all `internal` on `Context`, with no public passthrough on
-`SMB2Manager`, so this cannot be worked around from application code. It needs a
-patched or forked AMSMB2.
+### The fix
 
-### What this does and doesn't invalidate
+Upstream commit **497ce6e "fix: empty password handling"** (2025-12-27) maps an
+empty password to NULL, restoring the anonymous path. It is on master and has
+**never been tagged**, so `project.yml` pins that revision rather than using
+`from: 4.0.3`, with the reasoning recorded inline. Revisit when a release above
+4.0.3 ships.
 
-The `SMBClient` seam and everything above it are unaffected — the error
-translation worked exactly as designed, mapping EPERM to `.authenticationFailed`
-and producing "192.168.68.51 rejected the username or password." That is the
-correct message for what the server returned.
+### What the live run verified that mocks could not
 
-But the headline stands: **on this server, with guest credentials, the app
-cannot connect.** Whether authenticated (username + password) connections work is
-**untested** — no account was available. That is the single most valuable
-remaining test.
+| Assumption the mock encoded | Live result |
+|---|---|
+| `"/"` is the share root; paths absolute, trailing slash stripped | **Confirmed** — `/Immich Photo Backup`, `/Isherveer` |
+| Directories report size 0 | Confirmed |
+| A rejected password surfaces as `.authenticationFailed` | Confirmed against a real rejection |
+| An unreachable host surfaces as `.timedOut` | Confirmed against a reserved address |
+| Upload reports progress; totals come from the local file | Confirmed |
+| Downloaded bytes match uploaded bytes | Confirmed |
+| A streamed read returns the same bytes | Confirmed |
+| Rename is a move to a sibling path | Confirmed |
+| Delete removes the item | Confirmed |
 
+Live coverage: `test01_ListShares`, `test02_Connect`,
+`test03_WrongPasswordIsAnAuthFailure`, `test04_UnreachableHostTimesOut`,
+`test05_ListRootAndPathConventions`, `test06_WriteCycle` (create directory →
+upload → list → download → byte-compare → stream → rename → delete → clean up).
 
+Skipped unless a server is configured; see the header comment in
+`SMBIntegrationTests.swift`.
 
-**Nothing has been exercised against a real SMB server.** Every SMB test runs
-against a mock through the `SMBClient` protocol seam. That is deliberate for the
-failure cases — an authentication rejection and a timeout cannot be produced
-reliably otherwise — but it means real-world interoperability is untested: server
-quirks, SMB dialect negotiation, throughput on large files, non-ASCII filename
-encodings, and whether a given server honours the server-side copy FSCTL that
-`copyItem` prefers. **Point it at a real share before trusting it with anything
-that matters.**
+---
 
-**No physical devices.** Simulator and Mac only. Notably untested as a result:
-the iOS local-network permission prompt (the simulator does not gate LAN access
-the way a device does, so `NSLocalNetworkUsageDescription` is present and correct
-but its prompt has never actually been shown), real iCloud Drive sync behaviour,
-and recovery-app URL schemes — no VPN or tunnel app is installed in a simulator,
-so `AppLauncher` has never successfully launched one. Its failure path is what
-gets exercised.
+## Known limitations
 
-**macOS UI automation was not run.** XCUITest on macOS drives the real cursor and
-keyboard and takes over the machine for the duration, so it was not run on the
-development machine in this session. The Mac side is covered by a clean build,
-the full 146-test unit suite passing on `platform=macOS`, and verification that
-the ad-hoc-signed bundle carries the correct entitlements and
-`LSMinimumSystemVersion 14.0`. The UI test suite is written to run there — it
-branches on `os(macOS)` for right-click and treats the Mac as regular-width — but
-those runs have not happened, so no Mac UI result is claimed.
+**Live testing covered exactly one server.** Samba 4.19.5 (CasaOS), guest access,
+over a LAN. Untested: Windows shares, macOS file sharing, other NAS firmware,
+authenticated (username + password) logins, SMB dialects other than what this
+server negotiated, very large files, non-ASCII filenames, and whether a given
+server honours the server-side copy call `copyItem` prefers.
+
+**Authenticated logins are untested.** The test server uses guest access only, so
+no username/password path has ever run against a real server. The credential
+plumbing is unit-tested; the protocol exchange is not.
 
 **Drag-and-drop between panes: the gesture is not automatable.** XCUITest
-synthesizes the drag — the run log shows the press, the drag and the velocity —
-but SwiftUI's `.draggable`/`.dropDestination` session never starts from
-synthesized events, so no drop occurs. Four approaches were tried
-(`press(forDuration:thenDragTo:)`, the same with
-`withVelocity:thenHoldForDuration:`, the `XCUICoordinate` variant, and dragging
-onto a concrete row rather than the pane); all deliver the gesture and none
-produce a drop. The test asserts everything up to the drop — both panes open, are
-independently addressable, and each lists its files — then skips explicitly.
-Drop *behaviour* is covered without the gesture by `FileTransferPayloadTests` and
-`TransferCoordinatorTests`, which run the same cross-provider transfer a drop
-triggers. **The gesture itself has never been executed and needs manual
-verification.**
+synthesizes the drag — the log shows the press, drag and velocity — but SwiftUI's
+`.draggable`/`.dropDestination` session never starts from synthesized events.
+Four approaches were tried; all deliver the gesture, none produce a drop. The
+test asserts everything up to the drop, then skips. Drop *behaviour* is covered
+by `FileTransferPayloadTests` and `TransferCoordinatorTests`. **The gesture
+itself has never been executed and needs manual verification.**
 
-**iPad multitasking not automated.** Split View and Slide Over layouts were
-designed for (`UIRequiresFullScreen = NO`, adaptive grid columns, breadcrumbs
-that scroll, `@ScaledMetric` sizing) but there is no automated test that resizes
-the app into a Slide Over pane and asserts the layout holds. This needs manual
-verification.
+**No physical devices.** Simulator and Mac only. Notably untested: the iOS
+local-network permission prompt (the simulator does not gate LAN access the way a
+device does, so `NSLocalNetworkUsageDescription` is correct but its prompt has
+never been shown), real iCloud Drive sync, and recovery-app URL schemes — no VPN
+app exists in a simulator, so only `AppLauncher`'s failure path has run.
 
-**Dynamic Type and Dark Mode not automated.** Semantic colors and text styles are
-used throughout, and the two previously hard-coded icon sizes now scale via
-`@ScaledMetric`. But no test renders the UI at accessibility text sizes or in
-dark appearance to assert nothing clips or loses contrast. Also needs manual
-verification.
+**macOS UI automation was not run.** XCUITest on macOS takes over the cursor and
+keyboard, so it was not run on the development machine. The Mac side is covered
+by a clean build, the full unit suite passing on `platform=macOS`, the live SMB
+integration suite running there, and verification that the ad-hoc-signed bundle
+carries the right entitlements. No Mac *UI* result is claimed.
 
-**QuickLook preview is not covered by UI tests.** `PreviewCoordinator`'s staging
-logic is straightforward and its provider is covered, but no UI test opens a
-preview and asserts QuickLook rendered — the QuickLook UI belongs to the system
-and is awkward to assert against. The streamed-not-buffered behaviour and the
-completeness requirement are documented in the README.
+**iPad multitasking not automated.** Split View and Slide Over were designed for
+(`UIRequiresFullScreen = NO`, adaptive grid, scrolling breadcrumbs, `@ScaledMetric`
+sizing, dual pane gated on size class) but no test resizes the app into a Slide
+Over pane and asserts the layout holds.
 
-**Files app Document Provider extension: not implemented.** This was a stretch
-goal. A `FileProvider` extension must share state with its host app, which
-requires an **App Group**, which requires a provisioned Apple Developer team.
-Adding one would break the property that this project builds and runs for anyone
-cloning it without a team. It is not scaffolded, tested, or stubbed — its absence
-is total and deliberate. `SMBService` and `FileProviding` are already the right
-seams for it if a team becomes available.
+**Dynamic Type and Dark Mode not automated.** Semantic colours and text styles
+throughout, and the two previously hard-coded icon sizes now scale. But no test
+renders at accessibility text sizes or in dark appearance to assert nothing clips
+or loses contrast.
+
+**QuickLook preview is not covered by UI tests.** The staging logic is covered and
+the streamed read is verified live, but no UI test opens a preview and asserts
+QuickLook rendered — that UI belongs to the system.
+
+**Files app Document Provider extension: not implemented.** A `FileProvider`
+extension needs an App Group, which needs a provisioned Apple Developer team.
+Adding one would break the property that this builds for anyone cloning it
+without a team. Not scaffolded, not stubbed — absent and deliberate.
 
 **iCloud Drive direct container access is untested.** Without the ubiquity
-entitlement (which needs a team), `DeviceFileService.iCloudDriveRoot` returns
-`nil` and the app falls back to the document picker. The upgrade path that engages
-direct container access when the entitlement *is* present is implemented but has
-never run.
+entitlement (which needs a team), `iCloudDriveRoot` returns `nil` and the app
+falls back to the document picker. The upgrade path is implemented but has never
+run.
 
-**Coverage is not measured.** `gatherCoverageData` is enabled in the scheme, but
-no coverage percentage is claimed here because none was collected as a gate. The
-tables above list what is covered by name rather than implying a number.
+**Coverage is not measured.** `gatherCoverageData` is on, but no percentage is
+claimed because none was collected as a gate. The tables above list what is
+covered by name rather than implying a number.

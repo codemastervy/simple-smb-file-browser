@@ -72,7 +72,11 @@ final class SMBIntegrationTests: XCTestCase {
             )
         }
 
-        let url = FileManager.default.homeDirectoryForCurrentUser
+        // NSHomeDirectory rather than homeDirectoryForCurrentUser: the latter is
+        // macOS-only, and this test target also builds for iOS. Under the App
+        // Sandbox both resolve to the container, which is where the file has to
+        // live for a sandboxed test host to read it.
+        let url = URL(fileURLWithPath: NSHomeDirectory())
             .appendingPathComponent(".simple-smb-integration.json")
         guard let data = try? Data(contentsOf: url) else {
             throw XCTSkip("""
