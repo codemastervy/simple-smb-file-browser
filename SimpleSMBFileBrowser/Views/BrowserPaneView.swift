@@ -196,6 +196,57 @@ struct BrowserPaneView: View {
         .safeAreaInset(edge: .bottom) {
             if isSelecting, !browser.selection.isEmpty { batchActionBar }
         }
+        // Local failures appear inline; remote ones are escalated below.
+        .safeAreaInset(edge: .top) {
+            if let failure = browser.failure, !browser.provider.isRemote {
+                failureBanner(failure)
+            }
+        }
+        // Any failure from a remote provider — a failed listing, delete, rename
+        // or folder creation, not just the initial connect — raises the
+        // full-screen modal, which is where the recovery actions live. Without
+        // this the view model recorded failures that nothing ever displayed.
+        .onChange(of: browser.failure) { _, failure in
+            guard let failure, browser.provider.isRemote else { return }
+            model.presentedFailure = AppModel.PresentedFailure(
+                failure: failure,
+                serverID: browser.location.serverID
+            )
+            browser.clearFailure()
+        }
+    }
+
+    /// Inline error for on-device locations, where a full-screen connection
+    /// modal would be nonsense — there is no connection to retry.
+    private func failureBanner(_ failure: BrowseFailure) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: failure.symbolName)
+                .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(failure.title)
+                    .font(.footnote.weight(.semibold))
+                Text(failure.message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            Button {
+                browser.clearFailure()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.secondary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss error")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .glassPanel(cornerRadius: 14)
+        .softDepth()
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
+        .accessibilityIdentifier("browser.errorBanner")
     }
 
     private var listView: some View {
