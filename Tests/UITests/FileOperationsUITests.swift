@@ -142,8 +142,9 @@ final class FileOperationsUITests: XCTestCase {
         element(app, "browser.add").tap()
         app.buttons["New Folder"].firstMatch.tap()
 
-        // SwiftUI doesn't reliably forward an accessibilityIdentifier onto a
-        // TextField inside an alert, so match the alert's own field.
+        // Matched via the alert rather than by identifier: SwiftUI doesn't
+        // reliably forward an accessibilityIdentifier onto a TextField inside an
+        // alert.
         let alert = app.alerts.firstMatch
         XCTAssertTrue(alert.waitForExistence(timeout: 10), "Expected the New Folder alert")
         let field = alert.textFields.firstMatch

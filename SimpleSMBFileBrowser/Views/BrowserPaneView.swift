@@ -13,15 +13,27 @@ struct BrowserPaneView: View {
     var onClosePane: (() -> Void)?
 
     @State private var isSelecting = false
-    @State private var renameTarget: FileItem?
-    @State private var renameText = ""
-    @State private var isCreatingFolder = false
-    @State private var newFolderName = ""
-    @State private var pendingDeletion: [FileItem] = []
-    @State private var isConfirmingDelete = false
+    @State private var activeAlert: PaneAlert?
+    @State private var alertText = ""
     @State private var isImportingFiles = false
     @State private var destinationRequest: DestinationRequest?
     @State private var isDropTargeted = false
+
+    /// The single alert this pane can present. See the .alert modifier below for
+    /// why there is exactly one.
+    enum PaneAlert: Identifiable {
+        case newFolder
+        case rename(FileItem)
+        case delete([FileItem])
+
+        var id: String {
+            switch self {
+            case .newFolder: return "newFolder"
+            case .rename(let item): return "rename:\(item.path)"
+            case .delete(let items): return "delete:" + items.map(\.path).joined(separator: "|")
+            }
+        }
+    }
 
     struct DestinationRequest: Identifiable {
         let id = UUID()
@@ -61,47 +73,25 @@ struct BrowserPaneView: View {
                 performTransfer(request.items, to: directory, mode: request.mode)
             }
         }
-        .alert("New Folder", isPresented: $isCreatingFolder) {
-            TextField("Folder name", text: $newFolderName)
-                .accessibilityIdentifier("newFolder.nameField")
-            Button("Cancel", role: .cancel) { newFolderName = "" }
-            Button("Create") {
-                let name = newFolderName
-                newFolderName = ""
-                Task { await browser.createFolder(named: name) }
-            }
-        } message: {
-            Text("Create a folder in \(browser.breadcrumbs.last?.title ?? browser.provider.label).")
-        }
-        .alert("Rename", isPresented: renameBinding) {
-            TextField("Name", text: $renameText)
-                .accessibilityIdentifier("rename.nameField")
-            Button("Cancel", role: .cancel) { renameTarget = nil }
-            Button("Rename") {
-                if let target = renameTarget {
-                    let name = renameText
-                    Task { await browser.rename(target, to: name) }
-                }
-                renameTarget = nil
-            }
-        }
-        // An alert rather than a confirmationDialog. On iOS 26 the dialog's
-        // .cancel-role button is not exposed to the accessibility tree at all —
-        // verified by dumping the element hierarchy while it was presented —
-        // which leaves a VoiceOver user unable to cancel a destructive action.
-        // An alert exposes both buttons properly and reads correctly on macOS too.
-        .alert(deletionPrompt, isPresented: $isConfirmingDelete) {
-            Button("Delete", role: .destructive) {
-                let doomed = pendingDeletion
-                pendingDeletion = []
-                isSelecting = false
-                Task { await browser.delete(doomed) }
-            }
-            Button("Cancel", role: .cancel) { pendingDeletion = [] }
-        } message: {
-            Text(pendingDeletion.count == 1
-                 ? "This can't be undone."
-                 : "These \(pendingDeletion.count) items will be deleted. This can't be undone.")
+        // ONE alert modifier, routed by `activeAlert`.
+        //
+        // This was previously three stacked .alert modifiers on the same view.
+        // SwiftUI does not reliably honour more than one presentation modifier
+        // per view: on iPhone all three happened to work, but on iPad only the
+        // first was ever presented, so New Folder worked and Rename and Delete
+        // silently did nothing. Routing through a single modifier removes the
+        // ambiguity entirely.
+        .alert(
+            alertTitle,
+            isPresented: Binding(
+                get: { activeAlert != nil },
+                set: { if !$0 { dismissAlert() } }
+            ),
+            presenting: activeAlert
+        ) { route in
+            alertActions(for: route)
+        } message: { route in
+            alertMessage(for: route)
         }
         .fileImporter(
             isPresented: $isImportingFiles,
@@ -249,7 +239,7 @@ struct BrowserPaneView: View {
                  : "Nothing in this folder matches “\(browser.searchText)”.")
         } actions: {
             if browser.searchText.isEmpty {
-                Button("New Folder") { isCreatingFolder = true }
+                Button("New Folder") { activeAlert = .newFolder }
                     .glassButton()
             }
         }
@@ -288,8 +278,7 @@ struct BrowserPaneView: View {
             }
             .disabled(!browser.provider.isRemote)
             Button(role: .destructive) {
-                pendingDeletion = browser.selectedItems
-                isConfirmingDelete = true
+                activeAlert = .delete(browser.selectedItems)
             } label: {
                 Label("Delete", systemImage: "trash")
             }
@@ -353,7 +342,7 @@ struct BrowserPaneView: View {
         ToolbarItem(placement: .primaryAction) {
             Menu {
                 Button {
-                    isCreatingFolder = true
+                    activeAlert = .newFolder
                 } label: {
                     Label("New Folder", systemImage: "folder.badge.plus")
                 }
@@ -409,8 +398,8 @@ struct BrowserPaneView: View {
         Divider()
 
         Button {
-            renameText = item.name
-            renameTarget = item
+            alertText = item.name
+            activeAlert = .rename(item)
         } label: {
             Label("Rename…", systemImage: "pencil")
         }
@@ -428,8 +417,7 @@ struct BrowserPaneView: View {
         Divider()
 
         Button(role: .destructive) {
-            pendingDeletion = [item]
-            isConfirmingDelete = true
+            activeAlert = .delete([item])
         } label: {
             Label("Delete", systemImage: "trash")
         }
@@ -551,21 +539,71 @@ struct BrowserPaneView: View {
         }
     }
 
-    // MARK: - Small helpers
+    // MARK: - Alert routing
 
-    private var renameBinding: Binding<Bool> {
-        Binding(
-            get: { renameTarget != nil },
-            set: { if !$0 { renameTarget = nil } }
-        )
-    }
-
-    private var deletionPrompt: String {
-        if pendingDeletion.count == 1 {
-            return "Delete “\(pendingDeletion[0].name)”?"
+    private var alertTitle: String {
+        switch activeAlert {
+        case .newFolder: return "New Folder"
+        case .rename: return "Rename"
+        case .delete(let items):
+            return items.count == 1
+                ? "Delete \u{201C}\(items[0].name)\u{201D}?"
+                : "Delete \(items.count) items?"
+        case nil: return ""
         }
-        return "Delete \(pendingDeletion.count) items?"
     }
+
+    @ViewBuilder
+    private func alertActions(for route: PaneAlert) -> some View {
+        switch route {
+        case .newFolder:
+            TextField("Folder name", text: $alertText)
+                .accessibilityIdentifier("alert.textField")
+            Button("Cancel", role: .cancel) { dismissAlert() }
+            Button("Create") {
+                let name = alertText
+                dismissAlert()
+                Task { await browser.createFolder(named: name) }
+            }
+        case .rename(let item):
+            TextField("Name", text: $alertText)
+                .accessibilityIdentifier("alert.textField")
+            Button("Cancel", role: .cancel) { dismissAlert() }
+            Button("Rename") {
+                let name = alertText
+                dismissAlert()
+                Task { await browser.rename(item, to: name) }
+            }
+        case .delete(let items):
+            Button("Delete", role: .destructive) {
+                dismissAlert()
+                isSelecting = false
+                Task { await browser.delete(items) }
+            }
+            Button("Cancel", role: .cancel) { dismissAlert() }
+        }
+    }
+
+    @ViewBuilder
+    private func alertMessage(for route: PaneAlert) -> some View {
+        switch route {
+        case .newFolder:
+            Text("Create a folder in \(browser.breadcrumbs.last?.title ?? browser.provider.label).")
+        case .rename:
+            EmptyView()
+        case .delete(let items):
+            Text(items.count == 1
+                 ? "This can't be undone."
+                 : "These \(items.count) items will be deleted. This can't be undone.")
+        }
+    }
+
+    private func dismissAlert() {
+        activeAlert = nil
+        alertText = ""
+    }
+
+    // MARK: - Small helpers
 
     private var searchPrompt: String {
         browser.recursiveSearch ? "Search this folder and subfolders" : "Search this folder"
