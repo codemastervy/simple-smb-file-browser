@@ -11,6 +11,9 @@ import Observation
 final class FileBrowserViewModel {
     let provider: any FileProviding
     let location: BrowserLocation
+    /// Stable per-pane identity. View models are cached by location, so this
+    /// lives as long as the pane does.
+    let paneID = UUID().uuidString
 
     private(set) var path: String
     private(set) var items: [FileItem] = []

@@ -59,8 +59,18 @@ enum UITestSupport {
 
         if seedsDeviceFiles { seedDeviceFiles() }
 
-        let factory: any SMBClientFactory = forcedFailure
-            .map { FailingSMBClientFactory(kind: $0) } ?? AMSMB2ClientFactory()
+        // A seeded server always gets a stub client, succeeding or failing on
+        // request. Without this, seeding a server would make the test attempt a
+        // real connection to an unroutable address and wait out the timeout,
+        // and the launch test would race a genuine failure modal.
+        let factory: any SMBClientFactory
+        if let forcedFailure {
+            factory = FailingSMBClientFactory(kind: forcedFailure)
+        } else if seedsServer {
+            factory = StubSMBClientFactory()
+        } else {
+            factory = AMSMB2ClientFactory()
+        }
 
         return AppModel(
             preferences: preferences,
@@ -110,5 +120,77 @@ private struct FailingSMBClient: SMBClient {
     func download(from path: String, to localURL: URL, progress: TransferProgress?) async throws { throw failure }
     func readStream(at path: String) -> AsyncThrowingStream<Data, any Error> {
         AsyncThrowingStream { $0.finish(throwing: failure) }
+    }
+}
+
+
+/// SMB factory whose client connects successfully and serves a small fixed
+/// listing, so the browser can be exercised without a server.
+private struct StubSMBClientFactory: SMBClientFactory {
+    func makeClient(for profile: ServerProfile, password: String?, timeout: TimeInterval) throws -> any SMBClient {
+        StubSMBClient()
+    }
+}
+
+private actor StubSMBClient: SMBClient {
+    private var items: [FileItem] = [
+        FileItem(path: "/Documents", name: "Documents", isDirectory: true),
+        FileItem(path: "/readme.txt", name: "readme.txt", isDirectory: false, size: 12,
+                 modifiedDate: Date(timeIntervalSince1970: 1_700_000_000)),
+        FileItem(path: "/photo.jpg", name: "photo.jpg", isDirectory: false, size: 2048,
+                 modifiedDate: Date(timeIntervalSince1970: 1_700_000_000)),
+    ]
+
+    func connect() async throws {}
+    func disconnect() async {}
+    func listShares() async throws -> [String] { ["Media"] }
+
+    func listDirectory(at path: String, recursive: Bool) async throws -> [FileItem] {
+        path == "/" ? items : []
+    }
+
+    func attributes(at path: String) async throws -> FileItem {
+        guard let match = items.first(where: { $0.path == path }) else { throw POSIXError(.ENOENT) }
+        return match
+    }
+
+    func createDirectory(at path: String) async throws {
+        items.append(FileItem(path: path, name: (path as NSString).lastPathComponent, isDirectory: true))
+    }
+
+    func removeFile(at path: String) async throws { items.removeAll { $0.path == path } }
+    func removeDirectory(at path: String, recursive: Bool) async throws { items.removeAll { $0.path == path } }
+
+    func move(from source: String, to destination: String) async throws {
+        guard let index = items.firstIndex(where: { $0.path == source }) else { throw POSIXError(.ENOENT) }
+        let existing = items[index]
+        items[index] = FileItem(
+            path: destination,
+            name: (destination as NSString).lastPathComponent,
+            isDirectory: existing.isDirectory,
+            size: existing.size,
+            modifiedDate: existing.modifiedDate
+        )
+    }
+
+    func copy(from source: String, to destination: String, recursive: Bool, progress: TransferProgress?) async throws {
+        _ = progress?(1, 1)
+    }
+
+    func upload(from localURL: URL, to path: String, progress: TransferProgress?) async throws {
+        items.append(FileItem(path: path, name: (path as NSString).lastPathComponent, isDirectory: false, size: 1))
+        _ = progress?(1, 1)
+    }
+
+    func download(from path: String, to localURL: URL, progress: TransferProgress?) async throws {
+        FileManager.default.createFile(atPath: localURL.path, contents: Data("stub".utf8))
+        _ = progress?(4, 4)
+    }
+
+    nonisolated func readStream(at path: String) -> AsyncThrowingStream<Data, any Error> {
+        AsyncThrowingStream { continuation in
+            continuation.yield(Data("stub".utf8))
+            continuation.finish()
+        }
     }
 }

@@ -98,7 +98,13 @@ struct ConnectionFailureView: View {
                 isRetrying = true
                 await model.retryConnection(for: serverID)
                 isRetrying = false
-                dismiss()
+                // Deliberately no dismiss() here. Presentation is driven by
+                // model.presentedFailure: retryConnection clears it, then sets a
+                // fresh failure if the retry also failed. Calling dismiss()
+                // would set that binding back to nil and swallow the new
+                // failure, leaving the user on an empty browser with no
+                // explanation. A successful retry leaves it nil, so the modal
+                // closes on its own.
             }
             .disabled(isRetrying)
             .accessibilityIdentifier("failureModal.retry")

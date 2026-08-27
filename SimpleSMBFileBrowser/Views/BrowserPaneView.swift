@@ -446,17 +446,17 @@ struct BrowserPaneView: View {
         let dragged = browser.selection.contains(item.id) ? browser.selectedItems : [item]
         return FileTransferPayload(
             sourceProviderID: browser.provider.providerID,
+            sourcePaneID: browser.paneID,
             items: dragged.map(FileTransferPayload.Item.init)
         )
     }
 
     private func handleDrop(_ payloads: [FileTransferPayload]) {
         for payload in payloads {
-            guard payload.sourceProviderID != browser.provider.providerID
-                    || !browser.isAtRoot else {
-                // Dropping onto the same directory it came from is a no-op.
-                continue
-            }
+            // A drag released back onto its own pane is a no-op. A drop from the
+            // *other* pane always transfers, even into the same directory, where
+            // it produces a de-duplicated copy.
+            guard payload.sourcePaneID != browser.paneID else { continue }
             guard let source = model.provider(withID: payload.sourceProviderID) else { continue }
             let items = payload.fileItems
             let destination = browser.provider

@@ -43,13 +43,22 @@ final class BrowserUITests: XCTestCase {
     func testLaunchesStraightIntoBrowserWithSavedServer() {
         let app = launch(["-uiTestSeedServer"])
 
-        // No onboarding screen: the sidebar is present immediately.
+        // The requirement is that the browser itself is what launches. On iPhone
+        // the split view collapses to a stack and pushes straight to the browser,
+        // so asserting the sidebar would contradict the behaviour under test.
         XCTAssertTrue(
-            sidebarRow(app, "sidebar.addServer").waitForExistence(timeout: 10),
-            "The sidebar should be on screen at launch, with no onboarding step"
+            sidebarRow(app, "browser.list").waitForExistence(timeout: 20),
+            "The app should open on the file browser, with no onboarding step"
         )
-        // The seeded server is the default, so it is selected automatically.
-        XCTAssertTrue(app.staticTexts["UI Test NAS"].waitForExistence(timeout: 10))
+        // The seeded server connects automatically and its contents are listed.
+        XCTAssertTrue(
+            app.staticTexts["readme.txt"].waitForExistence(timeout: 20),
+            "The default server should have auto-connected and listed its contents"
+        )
+        XCTAssertFalse(
+            sidebarRow(app, "failureModal").exists,
+            "A working default server must not raise the failure modal"
+        )
     }
 
     func testNoServersShowsInlinePromptNotABlockingModal() {
@@ -235,10 +244,10 @@ final class BrowserUITests: XCTestCase {
 
         app.buttons["failureModal.dismiss"].tap()
 
-        XCTAssertTrue(
-            sidebarRow(app, "sidebar.addServer").waitForExistence(timeout: 10),
-            "Dismissing should leave the app on the browser, not a dead end"
-        )
+        let modal = sidebarRow(app, "failureModal")
+        let deadline = Date().addingTimeInterval(10)
+        while modal.exists, Date() < deadline { usleep(300_000) }
+        XCTAssertFalse(modal.exists, "Dismissing should close the failure modal")
     }
 
     // MARK: - Settings

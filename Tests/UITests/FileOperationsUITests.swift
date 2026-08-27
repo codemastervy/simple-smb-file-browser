@@ -98,8 +98,13 @@ final class FileOperationsUITests: XCTestCase {
         app.staticTexts["sample-1.txt"].tap()
         element(app, "browser.batchDelete").tap()
 
-        let cancel = app.buttons["Cancel"].firstMatch
-        XCTAssertTrue(cancel.waitForExistence(timeout: 5))
+        // Scope to the presented dialog: a bare app.buttons["Cancel"] can match
+        // chrome outside it, and the sheet needs a moment to appear.
+        let confirmDelete = app.buttons["Delete"].firstMatch
+        XCTAssertTrue(confirmDelete.waitForExistence(timeout: 10), "Expected the delete confirmation")
+
+        let cancel = app.descendants(matching: .button).matching(identifier: "Cancel").firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10), "The confirmation should offer Cancel")
         cancel.tap()
 
         XCTAssertTrue(
@@ -131,10 +136,15 @@ final class FileOperationsUITests: XCTestCase {
         element(app, "browser.add").tap()
         app.buttons["New Folder"].firstMatch.tap()
 
-        let field = app.textFields["newFolder.nameField"]
-        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        // SwiftUI doesn't reliably forward an accessibilityIdentifier onto a
+        // TextField inside an alert, so match the alert's own field.
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 10), "Expected the New Folder alert")
+        let field = alert.textFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        field.tap()
         field.typeText("Created By UI Test")
-        app.buttons["Create"].firstMatch.tap()
+        alert.buttons["Create"].tap()
 
         XCTAssertTrue(
             app.staticTexts["Created By UI Test"].waitForExistence(timeout: 10),

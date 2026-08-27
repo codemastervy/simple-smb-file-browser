@@ -18,6 +18,10 @@ extension UTType {
 struct FileTransferPayload: Codable, Transferable, Sendable {
     /// `FileProviding.providerID` of the pane the drag started in.
     let sourceProviderID: String
+    /// Identifies the specific pane, so a drag released back onto its own pane
+    /// can be treated as a no-op without also blocking a cross-pane drop onto
+    /// the same directory (which is a legitimate duplicate).
+    let sourcePaneID: String
     let items: [Item]
 
     struct Item: Codable, Sendable {
