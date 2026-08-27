@@ -61,12 +61,16 @@ struct FileGridCell: View {
     let item: FileItem
     let isSelected: Bool
 
+    /// Scales the icon with Dynamic Type instead of pinning it to 34pt.
+    @ScaledMetric(relativeTo: .title) private var iconSize: CGFloat = 34
+    @ScaledMetric(relativeTo: .title) private var iconHeight: CGFloat = 44
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: item.symbolName)
-                .font(.system(size: 34))
+                .font(.system(size: iconSize))
                 .foregroundStyle(item.isDirectory ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
-                .frame(height: 44)
+                .frame(height: iconHeight)
 
             Text(item.name)
                 .font(.caption)
@@ -81,7 +85,7 @@ struct FileGridCell: View {
             }
         }
         .padding(10)
-        .frame(minHeight: 120)
+        .frame(minHeight: iconHeight * 2.7)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(isSelected ? AnyShapeStyle(.tint.opacity(0.18)) : AnyShapeStyle(.clear))

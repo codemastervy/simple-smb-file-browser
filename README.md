@@ -309,8 +309,23 @@ scheme can always be entered, launching never depends on `canOpenURL` (which onl
 answers for schemes declared in `LSApplicationQueriesSchemes`), and the Test
 button in Settings reports whether anything actually handled it.
 
-**No Files app Document Provider extension.** Listed as a stretch goal and not
-implemented; see TEST_RESULTS.md.
+**No Files app Document Provider extension.** This was a stretch goal, and it is
+not implemented. The reason is concrete rather than a matter of time: a
+`FileProvider` extension has to share state with its host app, which means an
+**App Group**, and App Group identifiers require a provisioned Apple Developer
+team. Adding one would break the core promise that this project builds and runs
+for anyone who clones it without a team — the opposite of what a stretch goal
+should cost. With a team configured it is a reasonable next step: `SMBService`
+and `FileProviding` are already the right seams for it, since the extension would
+need exactly the same operations the app's panes use.
+
+**Nothing here has been exercised against a real SMB server.** Every SMB test
+runs against a mock through the `SMBClient` seam. That is deliberate for the
+failure cases — an auth rejection and a timeout cannot be produced reliably
+otherwise — but it does mean real-world interoperability (server quirks, SMB
+dialect negotiation, large-file throughput, unusual character encodings in
+filenames) is untested. Point it at a real share before trusting it with
+anything.
 
 **Server-side copy depends on the server.** `copyItem` is delegated to AMSMB2;
 servers that do not support the relevant FSCTL fall back to its own read/write

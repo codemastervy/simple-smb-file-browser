@@ -15,6 +15,9 @@ struct ConnectionFailureView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var isRetrying = false
     @State private var recoveryLaunchFailed = false
+    /// Scales the failure glyph with the user's text size rather than
+    /// pinning it to 56pt.
+    @ScaledMetric(relativeTo: .largeTitle) private var glyphSize: CGFloat = 56
 
     var body: some View {
         ScrollView {
@@ -22,7 +25,7 @@ struct ConnectionFailureView: View {
                 Spacer(minLength: 24)
 
                 Image(systemName: failure.symbolName)
-                    .font(.system(size: 56))
+                    .font(.system(size: glyphSize))
                     .foregroundStyle(.orange)
                     .accessibilityHidden(true)
 
