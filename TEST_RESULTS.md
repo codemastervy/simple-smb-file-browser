@@ -16,6 +16,26 @@ Deployment targets under test: **iOS 17.0** and **macOS 14.0**.
 
 ---
 
+## Summary
+
+All four suites run against the same commit, after every fix below.
+
+| Suite | Destination | Result |
+|---|---|---|
+| Unit | iPhone 17 Pro Simulator | **153 passed**, 0 failed, 0 skipped |
+| Unit | macOS (arm64) | **153 passed**, 0 failed, 0 skipped |
+| UI | iPhone 17 Pro Simulator | **20 passed**, 0 failed, 1 skipped |
+| UI | iPad Pro 13-inch (M5) Simulator | **20 passed**, 0 failed, 1 skipped |
+| Build | macOS · iPhone Sim · iPad Sim | clean, 0 errors, 0 warnings |
+
+The single skip in each UI suite is the drag *gesture*, which XCUITest cannot
+drive; see Known limitations. Everything around it in that test runs and passes.
+
+**Not covered by any of this:** the app has never connected to a real SMB server.
+See Known limitations — that gap is structural, not an oversight.
+
+---
+
 ## Builds
 
 | Target | Destination | Result |
