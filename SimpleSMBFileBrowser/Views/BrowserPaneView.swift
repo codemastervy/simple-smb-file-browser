@@ -7,9 +7,15 @@ struct BrowserPaneView: View {
     @Bindable var browser: FileBrowserViewModel
     /// Shown in the pane header when two panes are visible.
     var showsPaneHeader = false
-    /// Distinguishes the two panes for accessibility and UI tests; a shared
-    /// identifier would make a drop target ambiguous.
-    var paneIdentifier = "browser.pane"
+    /// Namespace for this pane's element identifiers. Defaults to "browser", so a
+    /// single pane exposes "browser.list" / "browser.grid"; the dual-pane layout
+    /// passes "browser.primary" / "browser.secondary" so the two panes are
+    /// distinguishable and a drop target is unambiguous.
+    ///
+    /// The identifier goes on the list and grid, not on a wrapper: putting an
+    /// accessibilityIdentifier on the containing view makes it one accessibility
+    /// element and hides every child inside it.
+    var paneIdentifier = "browser"
     var onClosePane: (() -> Void)?
 
     @State private var isSelecting = false
@@ -186,7 +192,6 @@ struct BrowserPaneView: View {
         .overlay(alignment: .bottom) {
             if isSelecting, !browser.selection.isEmpty { batchActionBar }
         }
-        .accessibilityIdentifier(paneIdentifier)
     }
 
     private var listView: some View {
@@ -203,7 +208,7 @@ struct BrowserPaneView: View {
         #if !os(macOS)
         .refreshable { await browser.refresh() }
         #endif
-        .accessibilityIdentifier("browser.list")
+        .accessibilityIdentifier("\(paneIdentifier).list")
     }
 
     private var gridView: some View {
@@ -224,7 +229,7 @@ struct BrowserPaneView: View {
         #if !os(macOS)
         .refreshable { await browser.refresh() }
         #endif
-        .accessibilityIdentifier("browser.grid")
+        .accessibilityIdentifier("\(paneIdentifier).grid")
     }
 
     private var emptyState: some View {

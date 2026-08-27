@@ -57,6 +57,7 @@
 		DEEF5096AB5FA97145EB1C2F /* KeychainServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B36FF9B3FD8C07F2404ACB /* KeychainServiceTests.swift */; };
 		E4E7B9220FD84FB535C47789 /* MockSMBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55B4EE63084DF2FA37E1564E /* MockSMBClient.swift */; };
 		EA68F5DEED50BF13041848E2 /* FileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409A6FB36CCCDE19F03FE5B4 /* FileProvider.swift */; };
+		F7858CD0D6FA727F08D7CAA5 /* FileTransferPayloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD083AB6DAD541227C341294 /* FileTransferPayloadTests.swift */; };
 		F8A7C9A501411998D5E11D7D /* TransferCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110D7E344EBA501A7C910F1A /* TransferCoordinator.swift */; };
 /* End PBXBuildFile section */
 
@@ -112,6 +113,7 @@
 		863B2DC47646E25EAD5F84F8 /* BrowseFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseFailure.swift; sourceTree = "<group>"; };
 		88C9CBA24705F4072E91E33F /* StoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreTests.swift; sourceTree = "<group>"; };
 		A6029E4840103F776499BD64 /* BrowserPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserPaneView.swift; sourceTree = "<group>"; };
+		AD083AB6DAD541227C341294 /* FileTransferPayloadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPayloadTests.swift; sourceTree = "<group>"; };
 		AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSMBFileBrowserApp.swift; sourceTree = "<group>"; };
 		B027A5FA4036132C63743A07 /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
 		B42C0E01575029B149D9AAAC /* DeviceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLocation.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				57C1001558B0ADE57B5359D4 /* DeviceFileServiceTests.swift */,
+				AD083AB6DAD541227C341294 /* FileTransferPayloadTests.swift */,
 				47B36FF9B3FD8C07F2404ACB /* KeychainServiceTests.swift */,
 				55B4EE63084DF2FA37E1564E /* MockSMBClient.swift */,
 				D8B2DEB1E1984C3689C44B4A /* ModelTests.swift */,
@@ -484,6 +487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B458376C21BEDE9330BE33F2 /* DeviceFileServiceTests.swift in Sources */,
+				F7858CD0D6FA727F08D7CAA5 /* FileTransferPayloadTests.swift in Sources */,
 				DEEF5096AB5FA97145EB1C2F /* KeychainServiceTests.swift in Sources */,
 				E4E7B9220FD84FB535C47789 /* MockSMBClient.swift in Sources */,
 				36FE1932FC208AE503476EA4 /* ModelTests.swift in Sources */,

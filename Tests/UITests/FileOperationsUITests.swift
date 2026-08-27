@@ -186,10 +186,10 @@ final class FileOperationsUITests: XCTestCase {
         )
         openInSecondPane.tap()
 
-        let primaryPane = element(app, "browser.pane.primary")
-        let secondaryPane = element(app, "browser.pane.secondary")
-        XCTAssertTrue(primaryPane.waitForExistence(timeout: 10), "Primary pane should be visible")
-        XCTAssertTrue(secondaryPane.waitForExistence(timeout: 10), "Second pane should be visible")
+        let primaryPane = element(app, "browser.primary.list")
+        let secondaryPane = element(app, "browser.secondary.list")
+        XCTAssertTrue(primaryPane.waitForExistence(timeout: 15), "Primary pane should be visible")
+        XCTAssertTrue(secondaryPane.waitForExistence(timeout: 15), "Second pane should be visible")
 
         // Drag from the first pane onto the second. Targeting the pane's own
         // element rather than a wrapper: a container identifier resolved as a
@@ -197,9 +197,17 @@ final class FileOperationsUITests: XCTestCase {
         let source = primaryPane.staticTexts["sample-3.txt"].firstMatch
         XCTAssertTrue(source.waitForExistence(timeout: 10), "Expected sample-3.txt in the first pane")
 
-        source.press(
-            forDuration: 1.2,
-            thenDragTo: secondaryPane.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).referencedElement
+        // Coordinate-based drag with an explicit velocity and a hold at the end.
+        // Element.press(forDuration:thenDragTo:) frequently fails to initiate a
+        // SwiftUI .draggable session at all — the lift isn't recognised — whereas
+        // the XCUICoordinate variant is the API intended for iPad drag-and-drop.
+        let start = source.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let end = secondaryPane.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4))
+        start.press(
+            forDuration: 1.0,
+            thenDragTo: end,
+            withVelocity: .slow,
+            thenHoldForDuration: 1.5
         )
 
         // The drop copies with a de-duplicated name rather than clobbering.

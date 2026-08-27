@@ -82,14 +82,14 @@ struct DetailView: View {
             BrowserPaneView(
                 model: model, browser: primary,
                 showsPaneHeader: true,
-                paneIdentifier: "browser.pane.primary"
+                paneIdentifier: "browser.primary"
             )
             Divider()
             BrowserPaneView(
                 model: model,
                 browser: secondary,
                 showsPaneHeader: true,
-                paneIdentifier: "browser.pane.secondary",
+                paneIdentifier: "browser.secondary",
                 onClosePane: { model.closeSecondPane() }
             )
         }
