@@ -67,7 +67,9 @@ struct DetailView: View {
                 )
             }
         }
-        .overlay(alignment: .bottom) {
+        // Same reasoning as the batch action bar: an inset reserves space for
+        // the strip instead of covering the browser's last row with it.
+        .safeAreaInset(edge: .bottom) {
             if !model.transfers.active.isEmpty { activeTransfersBar }
         }
     }

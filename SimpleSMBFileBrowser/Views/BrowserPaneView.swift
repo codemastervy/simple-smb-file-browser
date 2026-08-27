@@ -189,7 +189,11 @@ struct BrowserPaneView: View {
                 emptyState
             }
         }
-        .overlay(alignment: .bottom) {
+        // safeAreaInset rather than overlay. An overlay sits on top of the
+        // List's own scroll content, which covers the last row and — on iPad —
+        // left the buttons reachable by accessibility but not actually firing
+        // their actions. An inset reserves real layout space for the bar.
+        .safeAreaInset(edge: .bottom) {
             if isSelecting, !browser.selection.isEmpty { batchActionBar }
         }
     }
@@ -318,6 +322,7 @@ struct BrowserPaneView: View {
             } label: {
                 Label("View", systemImage: browser.viewMode.toggled.symbolName)
             }
+            .keyboardShortcut("1", modifiers: .command)
             .accessibilityIdentifier("browser.viewMode")
         }
 
@@ -351,11 +356,13 @@ struct BrowserPaneView: View {
                 } label: {
                     Label("New Folder", systemImage: "folder.badge.plus")
                 }
+                .keyboardShortcut("n", modifiers: [.command, .shift])
                 Button {
                     isImportingFiles = true
                 } label: {
                     Label("Upload Files…", systemImage: "arrow.up.doc")
                 }
+                .keyboardShortcut("u", modifiers: .command)
             } label: {
                 Label("Add", systemImage: "plus")
             }
@@ -369,6 +376,7 @@ struct BrowserPaneView: View {
             } label: {
                 Label("Refresh", systemImage: "arrow.clockwise")
             }
+            .keyboardShortcut("r", modifiers: .command)
             .accessibilityIdentifier("browser.refresh")
         }
         #endif
@@ -426,6 +434,7 @@ struct BrowserPaneView: View {
         } label: {
             Label("Delete", systemImage: "trash")
         }
+        .keyboardShortcut(.delete, modifiers: .command)
     }
 
     // MARK: - Actions
