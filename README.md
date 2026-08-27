@@ -41,6 +41,9 @@ move, copy, and download. Name collisions are resolved by de-duplicating
 and recent history, and a compact progress strip over the browser while anything
 is running.
 
+**Keyboard shortcuts** (Mac, and iPad with a hardware keyboard): ⇧⌘N new folder,
+⌘U upload, ⌘R refresh, ⌘1 toggle list/grid, ⌘⌫ delete.
+
 **Dual pane.** On iPad and Mac, two panes side by side — two shares, or a share
 and Device Files — with drag-and-drop between them.
 

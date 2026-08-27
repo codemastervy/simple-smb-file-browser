@@ -37,7 +37,7 @@ genuine Mac app. Rationale is in README ("Platform decisions").
 `xcodebuild test -only-testing:SimpleSMBFileBrowserTests` on iPhone 17 Pro
 Simulator.
 
-**146 tests executed, 0 failures, 0 skipped.**
+**153 tests executed, 0 failures, 0 skipped** — identical on iPhone Simulator and macOS.
 
 | Suite | Tests | Result |
 |---|---:|---|
@@ -45,6 +45,7 @@ Simulator.
 | `DeviceFileServiceTests` | 18 | Pass |
 | `KeychainServiceTests` | 11 | Pass |
 | `TransferCoordinatorTests` | 11 | Pass |
+| `FileTransferPayloadTests` | 7 | Pass |
 | `ServerStoreTests` | 11 | Pass |
 | `BrowsePathTests` | 11 | Pass |
 | `ServerProfileTests` | 11 | Pass |
@@ -120,6 +121,16 @@ iPad/Mac-only by design and is covered on iPad below).
 | New Folder creates a directory | `testNewFolderCreatesADirectory` | Pass |
 | List/grid view toggle | `testViewModeTogglesBetweenListAndGrid` | Pass |
 | Drag-and-drop between panes | `testDragAndDropBetweenPanes` | Skipped (iPhone) |
+
+### iPad Pro 13-inch (M5) Simulator
+
+**21 tests: 20 passed, 0 failed, 1 skipped.** The skip is the drag *gesture*
+(see Known limitations); the surrounding dual-pane assertions in that test do
+run and pass.
+
+The iPad run is the reason three of the seven defects above were found. The
+iPhone suite passed while multi-select delete was completely non-functional on
+iPad, so the two runs are not interchangeable.
 
 ### Notes on what these tests do and don't prove
 
