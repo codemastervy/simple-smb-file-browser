@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- macOS App Sandbox. Ignored on iOS, where the sandbox is implicit. -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+
+	<!-- Outbound TCP to the SMB server (port 445). Without this the macOS
+	     sandbox blocks every AMSMB2 connection. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+
+	<!-- Read/write access to files and folders the user explicitly picks, which
+	     is how both the Device Files locations get their access: the document
+	     picker on iOS/iPadOS, NSOpenPanel on macOS. -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+
+	<!-- Convenience destination for downloads pulled off a share. -->
+	<key>com.apple.security.files.downloads.read-write</key>
+	<true/>
+
+	<!-- NOTE: iCloud container entitlements
+	     (com.apple.developer.ubiquity-container-identifiers) are deliberately
+	     NOT declared. They require a provisioned Apple Developer team, which
+	     would make the project unbuildable for anyone cloning it without one.
+	     iCloud Drive is therefore reached through the document picker /
+	     NSOpenPanel, which needs no entitlement. DeviceFileService upgrades to
+	     direct ubiquity-container access automatically when the entitlement is
+	     present. See README "Known limitations". -->
+
+	<!-- NOTE: no keychain-access-groups. There is a single app target, so the
+	     default (bundle-id) access group is sufficient; declaring a shared
+	     group requires a team identifier prefix that ad-hoc signing lacks. -->
+</dict>
+</plist>

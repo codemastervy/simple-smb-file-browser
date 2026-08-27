@@ -1,0 +1,723 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		027B7F12DCA2F5D34E951B3B /* ServerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FF846C96CECC4AE36DCD9D /* ServerProfile.swift */; };
+		05D10E4F100B9AF459EAAECC /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E419C909BEAD21C0DC01E97 /* RootView.swift */; };
+		0680547333E4ED87C384250F /* FileItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B027A5FA4036132C63743A07 /* FileItem.swift */; };
+		0A8ECDAB043AC70D73582725 /* SMBClientEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47F61BBB5786E61FB3A49D1 /* SMBClientEnvironment.swift */; };
+		2BF0796E173AAE823EFD743C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFF0DCD20C5F258E52CA912F /* Assets.xcassets */; };
+		4138E178A1641CDD81B62D7E /* BrowsePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */; };
+		4B45E8D876C6DC639EE05751 /* BrowserSorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7084644EDD77C8E7BDE5FFB /* BrowserSorting.swift */; };
+		4DC348E34C7DD27DB3B4F422 /* SMBFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A6F343B21AF405624D0EEB /* SMBFailure.swift */; };
+		6543872AC4741DA93A26658B /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE33A97EA80FC71804662A /* ConnectionState.swift */; };
+		66F45B451B80A1E90AB1C42C /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = E90869453994ED1D5086A296 /* AMSMB2 */; };
+		B093EB71B82E9C17399EAB0E /* SimpleSMBFileBrowserApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */; };
+		BDD5686C66817B8C9C79A6D1 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 1DFCFEB0B36F7D99F5B757A6 /* AMSMB2 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		53B70BC63CFA8A950B045EDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCA1FF774A8C9C5315AEFBD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CA3552638BC30C330CDD034;
+			remoteInfo = SimpleSMBFileBrowser;
+		};
+		E4F76B5D79DD2A23FE379007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCA1FF774A8C9C5315AEFBD4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7CA3552638BC30C330CDD034;
+			remoteInfo = SimpleSMBFileBrowser;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0E419C909BEAD21C0DC01E97 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		134C2A346705B80482BC4DEA /* SimpleSMBFileBrowserUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SimpleSMBFileBrowserUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		18627F390987525A526FED60 /* SimpleSMBFileBrowserTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SimpleSMBFileBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AEE33A97EA80FC71804662A /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
+		6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowsePath.swift; sourceTree = "<group>"; };
+		70FF846C96CECC4AE36DCD9D /* ServerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerProfile.swift; sourceTree = "<group>"; };
+		73EFA5C1CEF6404987E0A5DF /* SimpleSMBFileBrowser.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SimpleSMBFileBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2A6F343B21AF405624D0EEB /* SMBFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFailure.swift; sourceTree = "<group>"; };
+		AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleSMBFileBrowserApp.swift; sourceTree = "<group>"; };
+		B027A5FA4036132C63743A07 /* FileItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileItem.swift; sourceTree = "<group>"; };
+		B47F61BBB5786E61FB3A49D1 /* SMBClientEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBClientEnvironment.swift; sourceTree = "<group>"; };
+		BFF0DCD20C5F258E52CA912F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C7084644EDD77C8E7BDE5FFB /* BrowserSorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSorting.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		12285D6D105BEBDF44E687A0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66F45B451B80A1E90AB1C42C /* AMSMB2 in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35F98D8EF0D76D68307493E1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDD5686C66817B8C9C79A6D1 /* AMSMB2 in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0B506E159EDC0CE8AEB2FB5B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		10E30BB7DF0E485E5A40D0F6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BFF0DCD20C5F258E52CA912F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		11CCA3A6BD54215F3AC19AFC /* SimpleSMBFileBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				903D89EF5397DA50479B28E0 /* App */,
+				A55A71D756EF2F653B4F53BF /* Extensions */,
+				6EA80FA13A010A745CCCF912 /* Models */,
+				10E30BB7DF0E485E5A40D0F6 /* Resources */,
+				3814A001839796071374E37F /* Services */,
+				0B506E159EDC0CE8AEB2FB5B /* ViewModels */,
+				353D88B8C955AC38D5ADF131 /* Views */,
+			);
+			path = SimpleSMBFileBrowser;
+			sourceTree = "<group>";
+		};
+		353D88B8C955AC38D5ADF131 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0E419C909BEAD21C0DC01E97 /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3814A001839796071374E37F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B47F61BBB5786E61FB3A49D1 /* SMBClientEnvironment.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		5191A738C8176F4F586EE1CC /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E18EC835F8265F78C4195A51 /* UITests */,
+				785E3F4123E6436979F00F5D /* UnitTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		6EA80FA13A010A745CCCF912 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */,
+				C7084644EDD77C8E7BDE5FFB /* BrowserSorting.swift */,
+				4AEE33A97EA80FC71804662A /* ConnectionState.swift */,
+				B027A5FA4036132C63743A07 /* FileItem.swift */,
+				70FF846C96CECC4AE36DCD9D /* ServerProfile.swift */,
+				A2A6F343B21AF405624D0EEB /* SMBFailure.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		785E3F4123E6436979F00F5D /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		7EF3D3EC18DBFF87AF869FE4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				73EFA5C1CEF6404987E0A5DF /* SimpleSMBFileBrowser.app */,
+				18627F390987525A526FED60 /* SimpleSMBFileBrowserTests.xctest */,
+				134C2A346705B80482BC4DEA /* SimpleSMBFileBrowserUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		903D89EF5397DA50479B28E0 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AD1DF56BAFA3A0A32A204404 /* SimpleSMBFileBrowserApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		9DCD4DEA7E172CA9CFADBAB9 = {
+			isa = PBXGroup;
+			children = (
+				11CCA3A6BD54215F3AC19AFC /* SimpleSMBFileBrowser */,
+				5191A738C8176F4F586EE1CC /* Tests */,
+				7EF3D3EC18DBFF87AF869FE4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A55A71D756EF2F653B4F53BF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E18EC835F8265F78C4195A51 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4007FFAD8F83E82D4D3C3D1C /* SimpleSMBFileBrowserTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA2F21267C64D289A334B073 /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowserTests" */;
+			buildPhases = (
+				8F513BA4B3CAD577F3AD0345 /* Sources */,
+				35F98D8EF0D76D68307493E1 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A17BCB5600318D42B053AC41 /* PBXTargetDependency */,
+			);
+			name = SimpleSMBFileBrowserTests;
+			packageProductDependencies = (
+				1DFCFEB0B36F7D99F5B757A6 /* AMSMB2 */,
+			);
+			productName = SimpleSMBFileBrowserTests;
+			productReference = 18627F390987525A526FED60 /* SimpleSMBFileBrowserTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		74CAB0F62717FAE53E986FF1 /* SimpleSMBFileBrowserUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 214ADCBE35800001F2BC70FD /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowserUITests" */;
+			buildPhases = (
+				294CBFB0476A8441933DFB18 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DF071558FD1B499BA6A49695 /* PBXTargetDependency */,
+			);
+			name = SimpleSMBFileBrowserUITests;
+			packageProductDependencies = (
+			);
+			productName = SimpleSMBFileBrowserUITests;
+			productReference = 134C2A346705B80482BC4DEA /* SimpleSMBFileBrowserUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		7CA3552638BC30C330CDD034 /* SimpleSMBFileBrowser */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2258E3BBD97FBC051E6F2A62 /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowser" */;
+			buildPhases = (
+				77256230E338539EB7FDFE15 /* Sources */,
+				BF3361D377C8ABBF8B5598A4 /* Resources */,
+				12285D6D105BEBDF44E687A0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SimpleSMBFileBrowser;
+			packageProductDependencies = (
+				E90869453994ED1D5086A296 /* AMSMB2 */,
+			);
+			productName = SimpleSMBFileBrowser;
+			productReference = 73EFA5C1CEF6404987E0A5DF /* SimpleSMBFileBrowser.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCA1FF774A8C9C5315AEFBD4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					4007FFAD8F83E82D4D3C3D1C = {
+						ProvisioningStyle = Manual;
+					};
+					74CAB0F62717FAE53E986FF1 = {
+						ProvisioningStyle = Manual;
+						TestTargetID = 7CA3552638BC30C330CDD034;
+					};
+					7CA3552638BC30C330CDD034 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 8B47007D88032878B88350E2 /* Build configuration list for PBXProject "SimpleSMBFileBrowser" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9DCD4DEA7E172CA9CFADBAB9;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CC5F378A4B26B5AC09A838B7 /* XCRemoteSwiftPackageReference "AMSMB2" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7CA3552638BC30C330CDD034 /* SimpleSMBFileBrowser */,
+				4007FFAD8F83E82D4D3C3D1C /* SimpleSMBFileBrowserTests */,
+				74CAB0F62717FAE53E986FF1 /* SimpleSMBFileBrowserUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BF3361D377C8ABBF8B5598A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BF0796E173AAE823EFD743C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		294CBFB0476A8441933DFB18 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77256230E338539EB7FDFE15 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4138E178A1641CDD81B62D7E /* BrowsePath.swift in Sources */,
+				4B45E8D876C6DC639EE05751 /* BrowserSorting.swift in Sources */,
+				6543872AC4741DA93A26658B /* ConnectionState.swift in Sources */,
+				0680547333E4ED87C384250F /* FileItem.swift in Sources */,
+				05D10E4F100B9AF459EAAECC /* RootView.swift in Sources */,
+				0A8ECDAB043AC70D73582725 /* SMBClientEnvironment.swift in Sources */,
+				4DC348E34C7DD27DB3B4F422 /* SMBFailure.swift in Sources */,
+				027B7F12DCA2F5D34E951B3B /* ServerProfile.swift in Sources */,
+				B093EB71B82E9C17399EAB0E /* SimpleSMBFileBrowserApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F513BA4B3CAD577F3AD0345 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A17BCB5600318D42B053AC41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CA3552638BC30C330CDD034 /* SimpleSMBFileBrowser */;
+			targetProxy = E4F76B5D79DD2A23FE379007 /* PBXContainerItemProxy */;
+		};
+		DF071558FD1B499BA6A49695 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7CA3552638BC30C330CDD034 /* SimpleSMBFileBrowser */;
+			targetProxy = 53B70BC63CFA8A950B045EDE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0B572165C7FA08EBFDF6C261 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SimpleSMBFileBrowser/Resources/SimpleSMBFileBrowser.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimpleSMBFileBrowser/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple SMB";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowser;
+				PRODUCT_NAME = "Simple SMB";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Debug;
+		};
+		2DFD517528D2631F6ABE478F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowserUITests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SimpleSMBFileBrowser;
+			};
+			name = Debug;
+		};
+		41FC056270F2940941A32760 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowserUITests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SimpleSMBFileBrowser;
+			};
+			name = Release;
+		};
+		58CABE9342F89207AD693437 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B9D02FBE22AC95A3A2EE4708 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C68CD90F2A833B51BC298885 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowserTests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Simple SMB.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Simple SMB";
+			};
+			name = Release;
+		};
+		D23C7566EE956945DC1B6242 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SimpleSMBFileBrowser/Resources/SimpleSMBFileBrowser.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SimpleSMBFileBrowser/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple SMB";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowser;
+				PRODUCT_NAME = "Simple SMB";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2,6";
+			};
+			name = Release;
+		};
+		FE29FF63CFBFA1850EC1194C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowserTests;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Simple SMB.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Simple SMB";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		214ADCBE35800001F2BC70FD /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowserUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2DFD517528D2631F6ABE478F /* Debug */,
+				41FC056270F2940941A32760 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2258E3BBD97FBC051E6F2A62 /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B572165C7FA08EBFDF6C261 /* Debug */,
+				D23C7566EE956945DC1B6242 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8B47007D88032878B88350E2 /* Build configuration list for PBXProject "SimpleSMBFileBrowser" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58CABE9342F89207AD693437 /* Debug */,
+				B9D02FBE22AC95A3A2EE4708 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BA2F21267C64D289A334B073 /* Build configuration list for PBXNativeTarget "SimpleSMBFileBrowserTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE29FF63CFBFA1850EC1194C /* Debug */,
+				C68CD90F2A833B51BC298885 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC5F378A4B26B5AC09A838B7 /* XCRemoteSwiftPackageReference "AMSMB2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/AMSMB2.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1DFCFEB0B36F7D99F5B757A6 /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC5F378A4B26B5AC09A838B7 /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
+		};
+		E90869453994ED1D5086A296 /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC5F378A4B26B5AC09A838B7 /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FCA1FF774A8C9C5315AEFBD4 /* Project object */;
+}

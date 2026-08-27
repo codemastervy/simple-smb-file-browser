@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Partial Info.plist. GENERATE_INFOPLIST_FILE merges the INFOPLIST_KEY_*
+	     build settings from project.yml on top of these entries; only keys with
+	     no INFOPLIST_KEY_ equivalent belong here. -->
+
+	<!-- Required on iOS 14+. Connecting to an SMB server by LAN address trips
+	     the local-network privacy gate, and without this string the connection
+	     fails with no prompt shown. -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Simple SMB needs access to your local network to reach SMB file servers on it.</string>
+
+	<!-- Declared so canOpenURL can report on the built-in recovery-app
+	     suggestions. Arbitrary user-entered schemes are launched with
+	     UIApplication.open directly, which does not require declaration. -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tailscale</string>
+		<string>wireguard</string>
+		<string>pangolin</string>
+		<string>openvpn</string>
+		<string>tunnelblick</string>
+		<string>shadowrocket</string>
+	</array>
+
+	<!-- Surface the app's Documents directory in the system Files app, and let
+	     documents be edited in place rather than copied in. -->
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+
+	<!-- Uses only Apple-provided encryption; avoids the export-compliance
+	     prompt on every upload. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+</dict>
+</plist>
