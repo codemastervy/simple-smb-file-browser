@@ -322,7 +322,15 @@ should cost. With a team configured it is a reasonable next step: `SMBService`
 and `FileProviding` are already the right seams for it, since the extension would
 need exactly the same operations the app's panes use.
 
-**Nothing here has been exercised against a real SMB server.** Every SMB test
+**Guest access does not work against Samba.** Tested against Samba 4.19.5
+(CasaOS): macOS's own client enumerates the shares and mounts one as guest, but
+AMSMB2 rejects every guest credential combination with EPERM. AMSMB2 keeps its
+auth and signing settings `internal`, so this cannot be worked around from
+application code — it needs a patched AMSMB2. Authenticated connections are
+untested. Full detail and the credential matrix are in TEST_RESULTS.md. **If you
+rely on guest shares, this app will not connect to them today.**
+
+**Little else here has been exercised against a real SMB server.** Every SMB test
 runs against a mock through the `SMBClient` seam. That is deliberate for the
 failure cases — an auth rejection and a timeout cannot be produced reliably
 otherwise — but it does mean real-world interoperability (server quirks, SMB

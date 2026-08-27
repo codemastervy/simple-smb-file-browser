@@ -17,6 +17,7 @@
 		1D8BC81F609FD585FA704318 /* PreviewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DDB2E50266705F5BD27E458 /* PreviewCoordinator.swift */; };
 		226E6B57DFC6549279B6A3D5 /* StoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C9CBA24705F4072E91E33F /* StoreTests.swift */; };
 		2BF0796E173AAE823EFD743C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFF0DCD20C5F258E52CA912F /* Assets.xcassets */; };
+		347DC254755309B177C5F76E /* SMBIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C08D6450A9160796E8BE4DC /* SMBIntegrationTests.swift */; };
 		36FE1932FC208AE503476EA4 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B2DEB1E1984C3689C44B4A /* ModelTests.swift */; };
 		4138E178A1641CDD81B62D7E /* BrowsePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8409CA918458ABBE5C6F36 /* BrowsePath.swift */; };
 		45448FAE9880637BBD623D68 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DAD359E645E9EF685DCC7A /* SettingsView.swift */; };
@@ -89,6 +90,7 @@
 		1B6C18B6495BAAE838F0FEBF /* View+Glass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Glass.swift"; sourceTree = "<group>"; };
 		1DF297E78E9C30DA3E94F8AA /* TransferCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCoordinatorTests.swift; sourceTree = "<group>"; };
 		2B6E73F002B5174F8A100C30 /* BrowserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserLocation.swift; sourceTree = "<group>"; };
+		2C08D6450A9160796E8BE4DC /* SMBIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBIntegrationTests.swift; sourceTree = "<group>"; };
 		2DDB2E50266705F5BD27E458 /* PreviewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCoordinator.swift; sourceTree = "<group>"; };
 		36EB24DFBE0FEE0320DECC56 /* FileOperationsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperationsUITests.swift; sourceTree = "<group>"; };
 		3BA21469DCEB0595ACF06F2C /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				47B36FF9B3FD8C07F2404ACB /* KeychainServiceTests.swift */,
 				55B4EE63084DF2FA37E1564E /* MockSMBClient.swift */,
 				D8B2DEB1E1984C3689C44B4A /* ModelTests.swift */,
+				2C08D6450A9160796E8BE4DC /* SMBIntegrationTests.swift */,
 				B71D7DC71F5B134B066B1DE9 /* SMBServiceTests.swift */,
 				88C9CBA24705F4072E91E33F /* StoreTests.swift */,
 				1DF297E78E9C30DA3E94F8AA /* TransferCoordinatorTests.swift */,
@@ -491,6 +494,7 @@
 				DEEF5096AB5FA97145EB1C2F /* KeychainServiceTests.swift in Sources */,
 				E4E7B9220FD84FB535C47789 /* MockSMBClient.swift in Sources */,
 				36FE1932FC208AE503476EA4 /* ModelTests.swift in Sources */,
+				347DC254755309B177C5F76E /* SMBIntegrationTests.swift in Sources */,
 				09A0B578499FE582349DEAEA /* SMBServiceTests.swift in Sources */,
 				226E6B57DFC6549279B6A3D5 /* StoreTests.swift in Sources */,
 				7ACB5F3D1F94B26CFA17CCF7 /* TransferCoordinatorTests.swift in Sources */,

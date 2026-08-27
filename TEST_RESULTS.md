@@ -231,7 +231,72 @@ Also worth stating plainly: had only the iPhone simulator been run, this would
 have shipped an iPad build where **you cannot delete or rename a file**. The
 iPad run was not a formality.
 
-## Known limitations
+## Live server test — a blocking finding
+
+Run against a real server for the first time: **Samba 4.19.5-Ubuntu (CasaOS) at a
+LAN address, 7 shares, guest access enabled.**
+
+**Result: AMSMB2 cannot authenticate to it at all. The app does not connect.**
+
+Reachability and server-side guest access were both confirmed independently
+first, using macOS's own SMB client:
+
+| Check | Tool | Result |
+|---|---|---|
+| Host up | `ping` | 0% loss |
+| SMB listening | `nc -z 445` | open |
+| Share enumeration as guest | `smbutil view -g` | **7 shares listed** |
+| Guest *access* to a data share | `mount_smbfs -N //guest@host/Files` | **mounted, real files listed** |
+
+So the server is reachable, guest is permitted, and the native client works.
+Through AMSMB2 every credential combination fails identically with
+`POSIXError` code 1 (**EPERM**) and an empty description:
+
+| user | password | domain | Result |
+|---|---|---|---|
+| `guest` | *(empty)* | — | EPERM |
+| *(empty)* | *(empty)* | — | EPERM |
+| `guest` | *(empty)* | `WORKGROUP` | EPERM |
+| *(empty)* | *(empty)* | `WORKGROUP` | EPERM |
+| `guest` | `guest` | `WORKGROUP` | EPERM |
+| `guest` | `x` | — | EPERM |
+| unknown user | *(empty)* | — | EPERM |
+| unknown user | `anything` | — | EPERM |
+| `nobody` | *(empty)* | — | EPERM |
+| real-looking user | *(empty)* | — | EPERM |
+
+The unknown-user rows were chosen deliberately to trigger Samba's
+`map to guest = Bad User` / `Bad Password` behaviour, which grants guest access
+to unrecognised logins. It did not help.
+
+### What the cause is not
+
+- **Not Kerberos.** `AMSMB2.initClient` forces `authentication = .ntlmSsp`.
+- **Not signing.** It sets `securityMode = [.enabled]`.
+- **Not an empty-password bug in the app.** `Context.password` already converts
+  `""` to a NULL password, which is the anonymous path.
+- **Not the server.** The native client does guest access on the same share,
+  minutes apart, from the same machine.
+
+The remaining explanation is libsmb2's NTLMSSP anonymous/guest session handling.
+**AMSMB2 exposes no way to influence it:** `securityMode`, `authentication` and
+`seal` are all `internal` on `Context`, with no public passthrough on
+`SMB2Manager`, so this cannot be worked around from application code. It needs a
+patched or forked AMSMB2.
+
+### What this does and doesn't invalidate
+
+The `SMBClient` seam and everything above it are unaffected — the error
+translation worked exactly as designed, mapping EPERM to `.authenticationFailed`
+and producing "192.168.68.51 rejected the username or password." That is the
+correct message for what the server returned.
+
+But the headline stands: **on this server, with guest credentials, the app
+cannot connect.** Whether authenticated (username + password) connections work is
+**untested** — no account was available. That is the single most valuable
+remaining test.
+
+
 
 **Nothing has been exercised against a real SMB server.** Every SMB test runs
 against a mock through the `SMBClient` protocol seam. That is deliberate for the
