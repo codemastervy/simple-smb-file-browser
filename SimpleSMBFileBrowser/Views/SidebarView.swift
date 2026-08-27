@@ -26,7 +26,7 @@ struct SidebarView: View {
     }
 
     private func serverRow(_ profile: ServerProfile) -> some View {
-        NavigationLink(value: BrowserLocation.server(profile.id)) {
+        Group {
             HStack(spacing: 10) {
                 ConnectionStatusDot(state: model.connectionState(for: profile.id))
                 VStack(alignment: .leading, spacing: 1) {
@@ -142,9 +142,7 @@ struct SidebarView: View {
             // and is deliberately not persisted.
             DisclosureGroup(isExpanded: $model.isDeviceFilesExpanded) {
                 ForEach(DeviceLocation.allCases) { location in
-                    NavigationLink(value: BrowserLocation.device(location)) {
-                        Label(location.title, systemImage: location.symbolName)
-                    }
+                    Label(location.title, systemImage: location.symbolName)
                     .tag(BrowserLocation.device(location))
                     .contextMenu {
                         if model.isDualPaneSupported {

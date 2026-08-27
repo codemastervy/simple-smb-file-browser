@@ -12,6 +12,7 @@ final class AppModel {
     let servers: ServerStore
     let transfers: TransferCenter
     let transferCoordinator: TransferCoordinator
+    let preview: PreviewCoordinator
     private let deviceFiles: DeviceFileService
     private let clientFactory: any SMBClientFactory
 
@@ -58,6 +59,7 @@ final class AppModel {
         self.servers = servers ?? ServerStore()
         self.transfers = transfers
         self.transferCoordinator = TransferCoordinator(center: transfers)
+        self.preview = PreviewCoordinator(center: transfers)
         self.deviceFiles = deviceFiles
         self.clientFactory = clientFactory
     }
@@ -220,6 +222,36 @@ final class AppModel {
         try? servers.remove(id: id)
         if selectedLocation?.serverID == id { selectedLocation = servers.launchServer.map { .server($0.id) } }
         if secondaryLocation?.serverID == id { secondaryLocation = nil }
+    }
+
+    // MARK: - Download destination
+
+    /// Where "Download" puts files: a Downloads folder inside the on-device
+    /// location. A fixed, predictable destination rather than a save panel per
+    /// file, so a batch download of twenty files asks nothing.
+    func downloadDestination() -> (provider: any FileProviding, directory: String)? {
+        guard let provider = makeProvider(for: .device(.onMyDevice)) else { return nil }
+        let directory = provider.joining("Downloads", to: provider.rootPath)
+        try? FileManager.default.createDirectory(
+            at: URL(fileURLWithPath: directory), withIntermediateDirectories: true
+        )
+        return (provider, directory)
+    }
+
+    /// Resolves a provider by its `providerID`, used when a drop arrives and
+    /// only the source pane's identifier travelled with it.
+    func provider(withID id: String) -> (any FileProviding)? {
+        if id.hasPrefix("smb:") {
+            let raw = String(id.dropFirst("smb:".count))
+            guard let uuid = UUID(uuidString: raw) else { return nil }
+            return makeProvider(for: .server(uuid))
+        }
+        if id.hasPrefix("device:") {
+            let raw = String(id.dropFirst("device:".count))
+            guard let location = DeviceLocation(rawValue: raw) else { return nil }
+            return makeProvider(for: .device(location))
+        }
+        return nil
     }
 
     // MARK: - Dual pane
