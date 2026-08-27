@@ -32,6 +32,25 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 
+	<!-- Private drag-and-drop type for moving items between browser panes.
+	     Declared so a drag originating here is never mistaken for a generic
+	     file drop; see FileTransferPayload. -->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>eu.org.amirulandalib.SimpleSMBFileBrowser.file-reference</string>
+			<key>UTTypeDescription</key>
+			<string>Simple SMB File Reference</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
+		</dict>
+	</array>
+
 	<!-- Uses only Apple-provided encryption; avoids the export-compliance
 	     prompt on every upload. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
