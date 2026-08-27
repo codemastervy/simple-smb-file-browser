@@ -82,7 +82,12 @@ struct BrowserPaneView: View {
                 renameTarget = nil
             }
         }
-        .confirmationDialog(deletionPrompt, isPresented: $isConfirmingDelete, titleVisibility: .visible) {
+        // An alert rather than a confirmationDialog. On iOS 26 the dialog's
+        // .cancel-role button is not exposed to the accessibility tree at all —
+        // verified by dumping the element hierarchy while it was presented —
+        // which leaves a VoiceOver user unable to cancel a destructive action.
+        // An alert exposes both buttons properly and reads correctly on macOS too.
+        .alert(deletionPrompt, isPresented: $isConfirmingDelete) {
             Button("Delete", role: .destructive) {
                 let doomed = pendingDeletion
                 pendingDeletion = []
@@ -90,6 +95,10 @@ struct BrowserPaneView: View {
                 Task { await browser.delete(doomed) }
             }
             Button("Cancel", role: .cancel) { pendingDeletion = [] }
+        } message: {
+            Text(pendingDeletion.count == 1
+                 ? "This can't be undone."
+                 : "These \(pendingDeletion.count) items will be deleted. This can't be undone.")
         }
         .fileImporter(
             isPresented: $isImportingFiles,

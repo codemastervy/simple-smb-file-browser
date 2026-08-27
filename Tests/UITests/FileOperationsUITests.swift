@@ -77,10 +77,12 @@ final class FileOperationsUITests: XCTestCase {
         )
         deleteButton.tap()
 
-        // Confirmation is required before anything is destroyed.
-        let confirm = app.buttons["Delete"].firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "Deleting should ask for confirmation")
-        confirm.tap()
+        // Scoped to the alert: the batch action bar also has a button labelled
+        // "Delete", so an unscoped query matches whether or not the confirmation
+        // is actually up.
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 10), "Deleting should ask for confirmation")
+        alert.buttons["Delete"].tap()
 
         XCTAssertTrue(
             waitForDisappearance(app.staticTexts["sample-1.txt"], timeout: 10),
@@ -98,13 +100,11 @@ final class FileOperationsUITests: XCTestCase {
         app.staticTexts["sample-1.txt"].tap()
         element(app, "browser.batchDelete").tap()
 
-        // Scope to the presented dialog: a bare app.buttons["Cancel"] can match
-        // chrome outside it, and the sheet needs a moment to appear.
-        let confirmDelete = app.buttons["Delete"].firstMatch
-        XCTAssertTrue(confirmDelete.waitForExistence(timeout: 10), "Expected the delete confirmation")
+        let alert = app.alerts.firstMatch
+        XCTAssertTrue(alert.waitForExistence(timeout: 10), "Deleting should ask for confirmation")
 
-        let cancel = app.descendants(matching: .button).matching(identifier: "Cancel").firstMatch
-        XCTAssertTrue(cancel.waitForExistence(timeout: 10), "The confirmation should offer Cancel")
+        let cancel = alert.buttons["Cancel"]
+        XCTAssertTrue(cancel.waitForExistence(timeout: 10), "The confirmation must offer Cancel")
         cancel.tap()
 
         XCTAssertTrue(
