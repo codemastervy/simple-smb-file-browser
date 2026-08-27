@@ -353,7 +353,7 @@ loop.
 
 | Package | Version | Purpose |
 |---|---|---|
-| [AMSMB2](https://github.com/amosavian/AMSMB2) | 4.0.3 | SMB2/3 client (vendors libsmb2) |
+| [AMSMB2](https://github.com/amosavian/AMSMB2) | pinned to `497ce6e` | SMB2/3 client (vendors libsmb2). **Not a release tag** — 4.0.3 cannot connect to guest shares; see Known limitations. |
 | [swift-system](https://github.com/apple/swift-system) | transitive | AMSMB2 dependency |
 | [swift-atomics](https://github.com/apple/swift-atomics) | transitive | AMSMB2 dependency |
 
