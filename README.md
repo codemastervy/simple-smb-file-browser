@@ -107,6 +107,39 @@ Locally"), which is enough to build, run, and test on all three platforms. To us
 your own team, set `DEVELOPMENT_TEAM` and switch `CODE_SIGN_STYLE` to `Automatic`
 in `project.yml`, then regenerate.
 
+### Starting again from nothing
+
+This repository is self-contained: delete the local copy and everything needed to
+rebuild is here. A fresh clone requires **only Xcode** — no extra tooling, no
+regenerating, no manual dependency setup.
+
+```bash
+git clone https://github.com/codemastervy/simple-smb-file-browser.git
+cd simple-smb-file-browser
+open SimpleSMBFileBrowser.xcodeproj      # then press Run
+```
+
+Committed on purpose, so none of it has to be reconstructed:
+
+| | |
+|---|---|
+| `SimpleSMBFileBrowser.xcodeproj` | the generated project — so XcodeGen is *not* required to build |
+| `project.yml` | the spec it was generated from, if you need to change targets |
+| `Package.resolved` | pins AMSMB2 to the exact revision that fixes guest auth |
+| `*.entitlements`, `Info.plist` | sandbox and Info.plist keys, including the load-bearing `NSLocalNetworkUsageDescription` |
+| `Assets.xcassets` | app icon at every required size |
+| `Tests/` | 160 unit + 21 UI tests, plus the live SMB integration suite |
+| `docs/screenshots/` | the screenshots in this README |
+
+Deliberately **not** committed: build output (`DerivedData`, `.dmg`, `.ipa`). It
+is several GB, regenerable in one command, and GitHub rejects files over 100 MB.
+Released binaries live on the
+[Releases page](https://github.com/codemastervy/simple-smb-file-browser/releases)
+instead.
+
+Verified by cloning this repo into an empty directory and building it with
+nothing but Xcode installed.
+
 ### Project generation
 
 The `.xcodeproj` is generated from [`project.yml`](project.yml) by
