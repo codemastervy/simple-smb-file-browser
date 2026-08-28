@@ -104,7 +104,12 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Simple SMB
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
-        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        # Split per-idiom. iPad multitasking requires all four orientations
+        # whenever UIRequiresFullScreen is NO — declaring only three makes
+        # the build warn and undermines Split View / Slide Over support.
+        # iPhone keeps upside-down off, which is conventional.
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UIRequiresFullScreen: NO
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
