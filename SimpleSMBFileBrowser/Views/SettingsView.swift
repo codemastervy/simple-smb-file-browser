@@ -52,9 +52,12 @@ struct SettingsView: View {
             .accessibilityIdentifier("settings.recoveryAppPicker")
 
             if isCustomSelected {
-                TextField("App name", text: $customName)
+                // Label in the title, example in the prompt: without the
+                // split, the title behaves as a label on macOS and as a
+                // placeholder on iOS, which reads differently per platform.
+                TextField("App name", text: $customName, prompt: Text("Tailscale"))
                     .accessibilityIdentifier("settings.customName")
-                TextField("URL scheme (e.g. tailscale)", text: $customScheme)
+                TextField("URL scheme", text: $customScheme, prompt: Text("tailscale"))
                     .autocorrectionDisabled()
                     #if !os(macOS)
                     .textInputAutocapitalization(.never)

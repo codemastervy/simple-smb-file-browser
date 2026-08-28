@@ -4,9 +4,21 @@ import SwiftUI
 struct FileRowView: View {
     let item: FileItem
     let isSelected: Bool
+    /// True while the pane is in multi-select mode.
+    var isSelecting: Bool = false
 
     var body: some View {
         HStack(spacing: 12) {
+            if isSelecting {
+                // An explicit indicator rather than relying on the List's own
+                // highlight: selection is driven by a tap gesture so it behaves
+                // the same on iOS and macOS, and the row has to show that state
+                // itself.
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? AnyShapeStyle(.tint) : AnyShapeStyle(.tertiary))
+                    .transition(.scale.combined(with: .opacity))
+            }
             Image(systemName: item.symbolName)
                 .font(.title3)
                 .foregroundStyle(item.isDirectory ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))

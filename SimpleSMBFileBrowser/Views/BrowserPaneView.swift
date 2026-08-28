@@ -194,7 +194,7 @@ struct BrowserPaneView: View {
         // left the buttons reachable by accessibility but not actually firing
         // their actions. An inset reserves real layout space for the bar.
         .safeAreaInset(edge: .bottom) {
-            if isSelecting, !browser.selection.isEmpty { batchActionBar }
+            if isSelecting { batchActionBar }
         }
         // Local failures appear inline; remote ones are escalated below.
         .safeAreaInset(edge: .top) {
@@ -250,16 +250,20 @@ struct BrowserPaneView: View {
     }
 
     private var listView: some View {
-        List(selection: isSelecting ? $browser.selection : .constant([])) {
+        List {
             ForEach(browser.displayedItems) { item in
-                FileRowView(item: item, isSelected: browser.selection.contains(item.id))
+                FileRowView(
+                    item: item,
+                    isSelected: browser.selection.contains(item.id),
+                    isSelecting: isSelecting
+                )
                     .onTapGesture { handleTap(item) }
                     .contextMenu { itemMenu(item) }
                     .draggable(payload(for: item))
-                    .tag(item.id)
             }
         }
         .listStyle(.inset)
+        .animation(.easeInOut(duration: 0.15), value: isSelecting)
         #if !os(macOS)
         .refreshable { await browser.refresh() }
         #endif
@@ -316,8 +320,9 @@ struct BrowserPaneView: View {
     // MARK: - Batch actions
 
     private var batchActionBar: some View {
-        HStack(spacing: 8) {
-            Text("\(browser.selection.count) selected")
+        let isEmpty = browser.selection.isEmpty
+        return HStack(spacing: 8) {
+            Text(isEmpty ? "Select items" : "\(browser.selection.count) selected")
                 .font(.footnote.weight(.medium))
                 .foregroundStyle(.secondary)
             Spacer(minLength: 8)
@@ -337,6 +342,7 @@ struct BrowserPaneView: View {
             }
             .accessibilityIdentifier("browser.batchDelete")
         }
+        .disabled(isEmpty)
         .padding(.leading, 16)
         .padding(.trailing, 8)
         .padding(.vertical, 6)
@@ -378,8 +384,16 @@ struct BrowserPaneView: View {
                 isSelecting.toggle()
                 if !isSelecting { browser.selection.removeAll() }
             } label: {
-                Label(isSelecting ? "Done" : "Select", systemImage: "checkmark.circle")
+                // The symbol has to change, not just the label. With a static
+                // checkmark.circle and an action bar that only appeared once
+                // something was selected, turning selection mode on produced no
+                // visible change whatsoever — it read as a dead button.
+                Label(
+                    isSelecting ? "Done" : "Select",
+                    systemImage: isSelecting ? "checkmark.circle.fill" : "checkmark.circle"
+                )
             }
+            .tint(isSelecting ? Color.accentColor : nil)
             .accessibilityIdentifier("browser.select")
         }
 

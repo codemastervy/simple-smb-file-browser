@@ -71,7 +71,8 @@ struct ServerFormView: View {
                         Text("Password")
                             .frame(width: 92, alignment: .leading)
                             .foregroundStyle(.secondary)
-                        SecureField("Optional", text: $password)
+                        SecureField("Password", text: $password, prompt: Text("Optional"))
+                            .labelsHidden()
                             .textContentType(.password)
                             .accessibilityIdentifier("serverForm.password")
                     }
@@ -232,7 +233,14 @@ private struct LabeledField: View {
             Text(title)
                 .frame(width: 92, alignment: .leading)
                 .foregroundStyle(.secondary)
-            TextField(prompt, text: $text)
+            // The example text goes in `prompt:`, not in the title position.
+            // A TextField's title is a *label*, and inside a Form on macOS it
+            // renders as visible text beside the field rather than as
+            // placeholder text — so it never cleared as you typed, and the
+            // caret sat to the right of it. labelsHidden() suppresses the
+            // duplicate label, since this row already draws its own.
+            TextField(title, text: $text, prompt: Text(prompt))
+                .labelsHidden()
         }
     }
 }
