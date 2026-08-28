@@ -22,19 +22,21 @@ All four suites run against the same commit, after every fix below.
 
 | Suite | Destination | Result |
 |---|---|---|
-| Unit | iPhone 17 Pro Simulator | **153 passed**, 0 failed, 0 skipped |
-| Unit | macOS (arm64) | **153 passed**, 0 failed, 0 skipped |
+| Unit | macOS (arm64) | **159 passed**, 0 failed, 0 skipped — includes the 6 live tests |
+| Unit | iPhone 17 Pro Simulator | **153 passed**, 0 failed, 6 skipped (live tests, no server configured there) |
 | UI | iPhone 17 Pro Simulator | **20 passed**, 0 failed, 1 skipped |
 | UI | iPad Pro 13-inch (M5) Simulator | **20 passed**, 0 failed, 1 skipped |
+| Live SMB | Samba 4.19.5 over LAN | **6 passed**, 0 failed — full write cycle |
 | Build | macOS · iPhone Sim · iPad Sim | clean, 0 errors, 0 warnings |
 
 The single skip in each UI suite is the drag *gesture*, which XCUITest cannot
 drive; see Known limitations. Everything around it in that test runs and passes.
+The 6 skips on iPhone are the live SMB tests, which skip by design unless a
+server is configured for that host.
 
-Plus **6 live integration tests** against a real Samba server — connect,
-enumerate, list, upload, download, stream, rename, delete — which found and
-forced the fix of a dependency bug that made guest shares unconnectable. See
-"Live server test" below.
+The live suite is the reason this project connects to a guest share at all — it
+found a bug in the released AMSMB2 that made that impossible. See "Live server
+test" below.
 
 ---
 
