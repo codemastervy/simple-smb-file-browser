@@ -9,7 +9,7 @@
 | Swift | 6.3.3 |
 | SDKs | iOS 26.5, macOS 26.5 |
 | Simulator runtime | iOS 26.5 (23F77) |
-| Dependency | AMSMB2 4.0.3 (resolved from SwiftPM) |
+| Dependency | AMSMB2 pinned to revision `497ce6e` — **not** 4.0.3; see "Live server test" |
 | Signing | Ad-hoc ("Sign to Run Locally"), no Apple Developer team |
 
 Deployment targets under test: **iOS 17.0** and **macOS 14.0**.
@@ -61,7 +61,7 @@ genuine Mac app. Rationale is in README ("Platform decisions").
 `xcodebuild test -only-testing:SimpleSMBFileBrowserTests` on iPhone 17 Pro
 Simulator.
 
-**153 tests executed, 0 failures, 0 skipped** — identical on iPhone Simulator and macOS.
+**153 tests executed, 0 failures.** On macOS the 6 live SMB tests also run, for 159 total; on iPhone Simulator they skip because no server is configured there.
 
 | Suite | Tests | Result |
 |---|---:|---|
