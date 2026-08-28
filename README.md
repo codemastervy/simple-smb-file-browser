@@ -10,6 +10,34 @@ moved between a share and the device.
 
 ---
 
+## Screenshots
+
+All three captured against a real Samba server on the local network, with live
+share contents — not mock data.
+
+### iPhone
+
+Launches straight into the browser, back-button navigation, search pinned to the
+bottom.
+
+<img src="docs/screenshots/iphone.png" alt="Simple SMB on iPhone showing a live SMB share" width="320">
+
+### iPad
+
+Persistent sidebar with connection status dot and default-server star, detail
+pane alongside it.
+
+<img src="docs/screenshots/ipad.png" alt="Simple SMB on iPad with sidebar and file listing" width="620">
+
+### Mac
+
+Native Mac window in Dark Mode — real sidebar, toolbar and menu bar, not an iPad
+app in a shim.
+
+<img src="docs/screenshots/mac.png" alt="Simple SMB on macOS in dark mode" width="720">
+
+---
+
 ## What it does
 
 **Launch behaviour.** The app opens directly into the file browser. There is no

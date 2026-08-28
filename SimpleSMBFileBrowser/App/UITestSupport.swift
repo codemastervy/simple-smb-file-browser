@@ -21,6 +21,15 @@ enum UITestSupport {
     /// and delete tests.
     static var seedsDeviceFiles: Bool { arguments.contains("-uiTestSeedFiles") }
 
+    /// Seeds a profile pointing at a real server and uses the real AMSMB2 client,
+    /// e.g. `-uiTestRealServer 192.168.1.50 Media`. Used to capture screenshots
+    /// against actual content; still gated behind `-uiTesting`.
+    static var realServer: (host: String, share: String)? {
+        guard let index = arguments.firstIndex(of: "-uiTestRealServer"),
+              index + 2 < arguments.count else { return nil }
+        return (arguments[index + 1], arguments[index + 2])
+    }
+
     /// Forces every SMB connection to fail with a given failure kind, e.g.
     /// `-uiTestFailure timedOut`.
     static var forcedFailure: BrowseFailure.Kind? {
@@ -50,7 +59,13 @@ enum UITestSupport {
         }
 
         let servers = ServerStore(defaults: defaults, credentials: InMemoryCredentialStore())
-        if seedsServer {
+        if let realServer {
+            let profile = ServerProfile(
+                name: realServer.host, host: realServer.host,
+                shareName: realServer.share, username: "guest"
+            )
+            try? servers.save(profile, password: nil, makeDefault: true)
+        } else if seedsServer {
             let profile = ServerProfile(
                 name: "UI Test NAS", host: "192.168.99.99", shareName: "Media", username: "tester"
             )
@@ -64,7 +79,9 @@ enum UITestSupport {
         // real connection to an unroutable address and wait out the timeout,
         // and the launch test would race a genuine failure modal.
         let factory: any SMBClientFactory
-        if let forcedFailure {
+        if realServer != nil {
+            factory = AMSMB2ClientFactory()
+        } else if let forcedFailure {
             factory = FailingSMBClientFactory(kind: forcedFailure)
         } else if seedsServer {
             factory = StubSMBClientFactory()

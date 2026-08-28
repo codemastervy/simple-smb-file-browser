@@ -230,10 +230,7 @@ final class SMBIntegrationTests: XCTestCase {
             throw XCTSkip("Share is not writable (\(failure.kind)); read-only checks already ran")
         }
 
-        // Clean up even if an assertion below fails.
-        defer {
-            Task { try? await service.delete(.init(path: directory, name: directory, isDirectory: true)) }
-        }
+        let directoryItem = FileItem(path: directory, name: directory, isDirectory: true)
 
         let remotePath = BrowsePath.appending("uploaded.txt", to: directory)
         // Progress callbacks arrive on AMSMB2's own queue, so the flag needs to
@@ -274,6 +271,36 @@ final class SMBIntegrationTests: XCTestCase {
         let afterDelete = try await service.listDirectory(at: directory)
         XCTAssertTrue(afterDelete.isEmpty, "Directory should be empty after deleting its contents")
 
+        // Remove the test directory itself. This used to be a
+        // `defer { Task { ... } }`, which never ran before the test process
+        // exited — so every run left a SimpleSMBTest-XXXX directory behind on
+        // the server. Cleanup has to be awaited inline.
+        try await service.delete(directoryItem)
+        let root = try await service.listDirectory(at: "/")
+        XCTAssertFalse(
+            root.contains { $0.name == directory },
+            "The test directory must not be left behind on the server"
+        )
+
+        await service.disconnect()
+    }
+
+    /// Removes anything an earlier interrupted run left behind, so a failure
+    /// mid-cycle doesn't accumulate directories on a real server.
+    func test07_CleansUpStrayTestDirectories() async throws {
+        let share = try requireShare()
+        let service = makeService(share: share)
+
+        let strays = (try await service.listDirectory(at: "/"))
+            .filter { $0.isDirectory && $0.name.hasPrefix("SimpleSMBTest-") }
+        for stray in strays {
+            try? await service.delete(stray)
+            print("removed stray test directory: \(stray.name)")
+        }
+
+        let remaining = (try await service.listDirectory(at: "/"))
+            .filter { $0.name.hasPrefix("SimpleSMBTest-") }
+        XCTAssertTrue(remaining.isEmpty, "Stray test directories should be gone")
         await service.disconnect()
     }
 }
