@@ -82,7 +82,16 @@ targets:
           - "Resources/Info.plist"
           - "Resources/*.entitlements"
     dependencies:
+      # embed is required, not optional. AMSMB2's Package.swift declares its
+      # library as `type: .dynamic`, so without an embed phase the framework is
+      # left in PackageFrameworks/ beside the app and never copied into
+      # Contents/Frameworks. The app then launches only from inside DerivedData,
+      # where @rpath happens to resolve to that sibling directory, and dies with
+      # "Library not loaded: @rpath/AMSMB2.framework" anywhere else — including
+      # from a .dmg.
       - package: AMSMB2
+        embed: true
+        codeSign: true
     settings:
       base:
         PRODUCT_NAME: Simple SMB
@@ -114,8 +123,25 @@ targets:
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
 
+        # Both conventions, because this is one target building for both
+        # platforms. An iOS bundle puts frameworks at Contents-less
+        # Frameworks/ beside the executable; a macOS bundle puts them at
+        # Contents/Frameworks, one level up from Contents/MacOS. XcodeGen
+        # emits only the iOS form because the target declares platform: iOS,
+        # which makes the Mac app fail at launch with
+        # "Library not loaded: @rpath/AMSMB2.framework".
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @executable_path/../Frameworks @loader_path/Frameworks"
         CODE_SIGN_ENTITLEMENTS: SimpleSMBFileBrowser/Resources/SimpleSMBFileBrowser.entitlements
-        ENABLE_HARDENED_RUNTIME: YES
+        # OFF, deliberately, and only because this project ad-hoc signs.
+        # Hardened runtime enforces library validation, which requires the
+        # process and every library it loads to share a Team ID. Two
+        # independent ad-hoc signatures have no team and cannot match, so
+        # the Mac app refuses to load its own embedded AMSMB2.framework:
+        # "different Team IDs". It also buys nothing here, since hardened
+        # runtime only matters for notarization, which needs a team anyway.
+        #
+        # Turn this back ON together with DEVELOPMENT_TEAM if you notarize.
+        ENABLE_HARDENED_RUNTIME: NO
 
         SWIFT_EMIT_LOC_STRINGS: YES
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

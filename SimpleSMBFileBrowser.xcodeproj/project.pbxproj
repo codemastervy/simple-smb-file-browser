@@ -48,6 +48,7 @@
 		B458376C21BEDE9330BE33F2 /* DeviceFileServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C1001558B0ADE57B5359D4 /* DeviceFileServiceTests.swift */; };
 		BDD5686C66817B8C9C79A6D1 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 1DFCFEB0B36F7D99F5B757A6 /* AMSMB2 */; };
 		C06B05D81998DC2CBA3D5BC2 /* DeviceFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10B8912CA30AF7FBAB30FDF /* DeviceFileService.swift */; };
+		C9772A38D8581E2561F00133 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = E90869453994ED1D5086A296 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C9D5600892171BFB34EC2E61 /* BrowseFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 863B2DC47646E25EAD5F84F8 /* BrowseFailure.swift */; };
 		CA1DC9063C453B70E12AF057 /* FileRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C403F5C0821E8732648D0E05 /* FileRowView.swift */; };
 		D52DC63192C96B2922EC0B23 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80326FBE94B610AC52FBCB3 /* AppModel.swift */; };
@@ -78,6 +79,20 @@
 			remoteInfo = SimpleSMBFileBrowser;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F90E95B6AD68FCC2C2907EF9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C9772A38D8581E2561F00133 /* AMSMB2 in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00A25FD4BA19AEC9946006CC /* SMBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBService.swift; sourceTree = "<group>"; };
@@ -360,6 +375,7 @@
 				77256230E338539EB7FDFE15 /* Sources */,
 				BF3361D377C8ABBF8B5598A4 /* Resources */,
 				12285D6D105BEBDF44E687A0 /* Frameworks */,
+				F90E95B6AD68FCC2C2907EF9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -527,7 +543,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleSMBFileBrowser/Resources/SimpleSMBFileBrowser.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleSMBFileBrowser/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple SMB";
@@ -539,10 +555,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowser;
 				PRODUCT_MODULE_NAME = SimpleSMBFileBrowser;
@@ -769,7 +782,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleSMBFileBrowser/Resources/SimpleSMBFileBrowser.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleSMBFileBrowser/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple SMB";
@@ -781,10 +794,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = eu.org.amirulandalib.SimpleSMBFileBrowser;
 				PRODUCT_MODULE_NAME = SimpleSMBFileBrowser;
