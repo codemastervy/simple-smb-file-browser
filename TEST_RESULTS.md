@@ -314,6 +314,33 @@ Skipped unless a server is configured; see the header comment in
 
 ---
 
+## End-to-end: the built app against the real server
+
+The live suite above drives `SMBService` directly, not the UI. So the shipped Mac
+app was built, seeded with a server profile pointing at the same Samba box, and
+launched — the first time the application itself had ever been run.
+
+It auto-connected at launch, as specified, and held a live SMB session:
+
+```
+Simple SMB (pid 24367)  TCP 192.168.68.73:50975 -> 192.168.68.51:445 (ESTABLISHED)
+```
+
+That establishes the whole path end to end: launch → `performLaunchConnect` →
+`ServerStore` reading the saved profile → `SMBService.connect()` → a real
+authenticated SMB session against a real server, in the real app rather than a
+test harness. A failed connect would have closed the socket and raised the
+failure modal instead.
+
+**What this does not establish:** nobody has *looked* at the app. Screen capture
+was unavailable in this environment, so no frame of the UI has been visually
+verified — not the file listing, not the sidebar, not a transfer, not a preview.
+The window renders (the process is alive and connected) and the UI layer is
+covered by 42 passing UI tests against stub clients, but "connected" is not the
+same as "looks right and behaves correctly under a human's hands."
+
+---
+
 ## Known limitations
 
 **Live testing covered exactly one server.** Samba 4.19.5 (CasaOS), guest access,
