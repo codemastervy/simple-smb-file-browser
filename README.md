@@ -421,3 +421,14 @@ loop.
 Build-time only, not a package dependency:
 [XcodeGen](https://github.com/yonaskolb/XcodeGen) 2.44.1 — regenerates the
 project from `project.yml`.
+
+---
+
+## Related projects
+
+[smb-web-client](https://github.com/codemastervy/smb-web-client) is a web port
+of this app — a separate project, built with a different stack (Python/FastAPI
++ React), that connects to SMB shares from a browser instead of natively. It
+reuses this app's name, its `BrowseFailure` error taxonomy, and its full-screen
+connection-failure modal with prioritized recovery actions as its design
+reference.
